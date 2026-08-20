@@ -1,0 +1,3948 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recipe Finder — Seasonal cooking &amp; tested recipes</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+<style>
+/* ==================================================================
+   RESET
+   ================================================================== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ==================================================================
+   DESIGN TOKENS
+   ================================================================== */
+:root {
+    --paper:        #faf7f2;
+    --paper-raised: #ffffff;
+    --paper-tint:   #f2ece2;
+    --ink:          #2b2420;
+    --ink-soft:     #4a4038;
+    --ink-muted:    #8a7d70;
+
+    --rule:         #e4dbd0;
+    --rule-strong:  #d2c6b6;
+
+    --terracotta:       #a8502f;
+    --terracotta-dark:  #8b3f22;
+    --terracotta-tint:  #f6ebe5;
+    --olive:            #5c6b4f;
+    --olive-dark:       #47543c;
+    --olive-tint:       #ecefe7;
+    --danger:           #9c3a2c;
+    --danger-tint:      #f8ebe8;
+
+    --font-serif: 'Playfair Display', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
+    --font-sans:  'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+    --radius:    3px;
+    --radius-lg: 4px;
+    --shadow-sm: 0 1px 2px rgba(43, 36, 32, 0.05);
+    --shadow-md: 0 6px 20px -10px rgba(43, 36, 32, 0.22);
+    --shadow-lg: 0 18px 46px -20px rgba(43, 36, 32, 0.30);
+    --shadow-xl: 0 28px 70px -26px rgba(43, 36, 32, 0.38);
+
+    --ease: cubic-bezier(0.32, 0.08, 0.24, 1);
+    --t:    0.24s var(--ease);
+}
+
+/* ==================================================================
+   BASE
+   ================================================================== */
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+    font-family: var(--font-sans);
+    background: var(--paper);
+    color: var(--ink-soft);
+    line-height: 1.65;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 15px;
+}
+
+h1, h2, h3, h4 {
+    font-family: var(--font-serif);
+    color: var(--ink);
+    font-weight: 600;
+    line-height: 1.22;
+    letter-spacing: -0.005em;
+}
+
+::selection { background: var(--terracotta-tint); color: var(--ink); }
+
+.icon { width: 18px; height: 18px; flex: none; display: block; }
+.icon-sm { width: 15px; height: 15px; }
+.icon-xs { width: 13px; height: 13px; }
+
+.eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+}
+
+.visually-hidden {
+    position: absolute; width: 1px; height: 1px;
+    padding: 0; margin: -1px; overflow: hidden;
+    clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+
+/* ==================================================================
+   MASTHEAD
+   ================================================================== */
+.site-header {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 2.25rem 2rem;
+    border-bottom: 1px solid #1d1815;
+}
+
+.header-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    gap: 1.15rem;
+}
+
+.brand-mark {
+    width: 44px; height: 44px;
+    border: 1px solid rgba(250, 247, 242, 0.28);
+    border-radius: 50%;
+    display: grid; place-items: center;
+    color: var(--paper);
+    flex: none;
+}
+
+.brand-mark .icon { width: 21px; height: 21px; }
+
+.brand-name {
+    font-size: 1.75rem;
+    color: var(--paper);
+    font-weight: 500;
+    letter-spacing: 0.01em;
+}
+
+.brand-tagline {
+    font-size: 0.7rem;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: rgba(250, 247, 242, 0.55);
+    margin-top: 0.25rem;
+    font-weight: 500;
+}
+
+/* ==================================================================
+   NAVIGATION
+   ================================================================== */
+.site-nav {
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.nav-inner {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 0 2rem;
+    display: flex;
+    gap: 2.25rem;
+    flex-wrap: wrap;
+}
+
+.nav-tab {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 1.05rem 0;
+    border: none;
+    background: none;
+    font-family: var(--font-sans);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    cursor: pointer;
+    position: relative;
+    transition: color var(--t);
+}
+
+.nav-tab::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0; bottom: -1px;
+    height: 2px;
+    background: var(--terracotta);
+    transform: scaleX(0);
+    transition: transform var(--t);
+    transform-origin: left;
+}
+
+.nav-tab:hover { color: var(--ink); }
+.nav-tab.active { color: var(--ink); }
+.nav-tab.active::after { transform: scaleX(1); }
+
+.nav-count {
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: var(--ink-muted);
+    background: var(--paper-tint);
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    padding: 0.05rem 0.34rem;
+    min-width: 20px;
+    text-align: center;
+}
+
+.nav-tab.active .nav-count { color: var(--terracotta); border-color: var(--rule-strong); }
+
+/* ==================================================================
+   LAYOUT
+   ================================================================== */
+.container {
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: 2.75rem 2rem 5rem;
+}
+
+.tab-content { display: none; }
+.tab-content.active { display: block; }
+
+.section-head {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 1.75rem;
+}
+
+.section-head .section-date {
+    margin-left: auto;
+    font-size: 0.76rem;
+    color: var(--ink-muted);
+    font-style: italic;
+    font-family: var(--font-serif);
+}
+
+/* ==================================================================
+   BUTTONS
+   ================================================================== */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.55rem;
+    padding: 0.75rem 1.35rem;
+    border-radius: var(--radius);
+    border: 1px solid transparent;
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 600;
+    letter-spacing: 0.075em;
+    text-transform: uppercase;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background var(--t), color var(--t), border-color var(--t);
+    text-decoration: none;
+}
+
+.btn:disabled { opacity: 0.45; cursor: progress; }
+
+.btn-primary {
+    background: var(--terracotta);
+    border-color: var(--terracotta);
+    color: #fdf9f6;
+}
+.btn-primary:hover:not(:disabled) { background: var(--terracotta-dark); border-color: var(--terracotta-dark); }
+
+.btn-ghost {
+    background: transparent;
+    border-color: var(--rule-strong);
+    color: var(--ink);
+}
+.btn-ghost:hover:not(:disabled) { border-color: var(--ink); background: rgba(43, 36, 32, 0.03); }
+.btn-ghost.favorited { border-color: var(--terracotta); color: var(--terracotta); background: var(--terracotta-tint); }
+
+.btn-ghost-olive {
+    background: transparent;
+    border-color: var(--olive);
+    color: var(--olive-dark);
+}
+.btn-ghost-olive:hover:not(:disabled) { background: var(--olive-tint); }
+
+.btn-ghost-danger {
+    background: transparent;
+    border-color: var(--rule-strong);
+    color: var(--danger);
+}
+.btn-ghost-danger:hover:not(:disabled) { border-color: var(--danger); background: var(--danger-tint); }
+
+.btn-sm { padding: 0.55rem 1rem; font-size: 0.72rem; }
+.btn-xs { padding: 0.4rem 0.75rem; font-size: 0.68rem; gap: 0.4rem; }
+
+/* ==================================================================
+   SEARCH PANEL
+   ================================================================== */
+.search-section {
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    padding: 2rem 2.25rem 1.85rem;
+    margin-bottom: 1.5rem;
+    box-shadow: var(--shadow-sm);
+}
+
+.mode-toggle {
+    display: inline-flex;
+    background: var(--paper-tint);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    padding: 3px;
+    gap: 3px;
+    margin-bottom: 1.5rem;
+}
+
+.mode-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    border: none;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 0.73rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    padding: 0.55rem 1.15rem;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: background var(--t), color var(--t), box-shadow var(--t);
+}
+
+.mode-btn:hover { color: var(--ink); }
+.mode-btn.active { background: var(--paper-raised); color: var(--ink); box-shadow: var(--shadow-sm); }
+
+.search-mode-panel { display: none; }
+.search-mode-panel.active { display: block; }
+
+.search-row { display: flex; gap: 0.7rem; flex-wrap: wrap; align-items: stretch; }
+
+.search-input-wrapper {
+    flex: 1;
+    min-width: 260px;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-input-wrapper > .field-icon {
+    position: absolute;
+    left: 15px;
+    color: var(--ink-muted);
+    pointer-events: none;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.85rem 2.6rem 0.85rem 2.9rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    font-family: var(--font-sans);
+    font-size: 0.95rem;
+    color: var(--ink);
+    background: var(--paper-raised);
+    outline: none;
+    transition: border-color var(--t), box-shadow var(--t);
+}
+
+.search-input:focus { border-color: var(--terracotta); box-shadow: 0 0 0 3px rgba(168, 80, 47, 0.10); }
+.search-input::placeholder { color: #b0a597; }
+
+.kbd-hint {
+    position: absolute;
+    right: 11px;
+    font-size: 0.68rem;
+    color: var(--ink-muted);
+    border: 1px solid var(--rule);
+    background: var(--paper-tint);
+    border-radius: 3px;
+    padding: 0.1rem 0.35rem;
+    pointer-events: none;
+    font-weight: 600;
+}
+
+.search-input:focus ~ .kbd-hint { opacity: 0; }
+
+/* Autocomplete dropdown */
+.suggest-box {
+    position: absolute;
+    top: calc(100% + 5px);
+    left: 0; right: 0;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    z-index: 60;
+    max-height: 330px;
+    overflow-y: auto;
+    display: none;
+}
+
+.suggest-box.visible { display: block; }
+
+.suggest-head {
+    padding: 0.5rem 0.9rem;
+    font-size: 0.64rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-muted);
+    font-weight: 600;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper);
+}
+
+.suggest-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.55rem 0.9rem;
+    cursor: pointer;
+    border-bottom: 1px solid var(--rule);
+    transition: background var(--t);
+}
+
+.suggest-item:last-child { border-bottom: none; }
+.suggest-item:hover, .suggest-item.highlight { background: var(--terracotta-tint); }
+
+.suggest-thumb {
+    width: 38px; height: 38px;
+    object-fit: cover;
+    border-radius: 2px;
+    background: var(--paper-tint);
+    flex: none;
+}
+
+.suggest-text { min-width: 0; flex: 1; }
+
+.suggest-name {
+    font-family: var(--font-serif);
+    font-size: 0.95rem;
+    color: var(--ink);
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+.suggest-name mark { background: transparent; color: var(--terracotta); font-weight: 700; }
+
+.suggest-meta { font-size: 0.72rem; color: var(--ink-muted); }
+
+.input-hint {
+    font-size: 0.82rem;
+    color: var(--ink-muted);
+    margin-top: 0.9rem;
+    line-height: 1.6;
+    max-width: 62ch;
+}
+
+.input-hint strong { color: var(--ink-soft); font-weight: 600; }
+
+/* Recent searches */
+.recent-row {
+    display: none;
+    align-items: center;
+    gap: 0.45rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+.recent-row.visible { display: flex; }
+
+.chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: 1px solid var(--rule);
+    background: transparent;
+    border-radius: 999px;
+    padding: 0.24rem 0.75rem;
+    font-family: var(--font-sans);
+    font-size: 0.76rem;
+    color: var(--ink-soft);
+    cursor: pointer;
+    transition: border-color var(--t), color var(--t), background var(--t);
+}
+
+.chip:hover { border-color: var(--terracotta); color: var(--terracotta); background: var(--terracotta-tint); }
+
+.chip-clear { color: var(--ink-muted); border-style: dashed; }
+
+/* Filters */
+.filter-row {
+    display: flex;
+    gap: 0.7rem;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-top: 1.6rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--rule);
+}
+
+.filter-row .eyebrow { margin-right: 0.35rem; }
+
+.filter-select {
+    padding: 0.62rem 2.2rem 0.62rem 0.85rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    font-family: var(--font-sans);
+    font-size: 0.85rem;
+    color: var(--ink);
+    background-color: var(--paper-raised);
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='11' height='11' viewBox='0 0 24 24' fill='none' stroke='%238a7d70' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 11px center;
+    min-width: 172px;
+    transition: border-color var(--t);
+}
+
+.filter-select:hover { border-color: var(--ink-muted); }
+.filter-select:focus { border-color: var(--terracotta); box-shadow: 0 0 0 3px rgba(168, 80, 47, 0.10); }
+
+.letter-browse {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: 1.4rem;
+    padding-top: 1.4rem;
+    border-top: 1px solid var(--rule);
+}
+
+.letter-btn {
+    width: 32px; height: 32px;
+    border: 1px solid var(--rule);
+    border-radius: 2px;
+    background: transparent;
+    font-family: var(--font-serif);
+    color: var(--ink-soft);
+    font-weight: 500;
+    font-size: 0.84rem;
+    cursor: pointer;
+    display: grid; place-items: center;
+    transition: background var(--t), color var(--t), border-color var(--t);
+}
+
+.letter-btn:hover { border-color: var(--ink); color: var(--ink); }
+.letter-btn.active { background: var(--terracotta); border-color: var(--terracotta); color: #fdf9f6; }
+
+/* ==================================================================
+   RECIPE OF THE DAY — COMPACT STRIP (now below search/filters)
+   ================================================================== */
+.rotd-strip {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--terracotta);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    margin-bottom: 2.5rem;
+    box-shadow: var(--shadow-sm);
+    transition: box-shadow var(--t), border-color var(--t);
+    min-height: 118px;
+}
+
+.rotd-strip:hover { box-shadow: var(--shadow-md); }
+
+.rotd-thumb {
+    width: 152px;
+    flex: none;
+    position: relative;
+    overflow: hidden;
+    background: var(--paper-tint);
+    cursor: pointer;
+}
+
+.rotd-thumb img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.7s var(--ease);
+}
+
+.rotd-strip:hover .rotd-thumb img { transform: scale(1.05); }
+
+.rotd-content {
+    flex: 1;
+    min-width: 0;
+    padding: 1rem 1.4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.3rem;
+}
+
+.rotd-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.63rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--terracotta);
+}
+
+.rotd-label .rotd-day {
+    color: var(--ink-muted);
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    border-left: 1px solid var(--rule-strong);
+    padding-left: 0.5rem;
+    margin-left: 0.15rem;
+}
+
+.rotd-name {
+    font-family: var(--font-serif);
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--ink);
+    cursor: pointer;
+    line-height: 1.25;
+    white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+    transition: color var(--t);
+}
+
+.rotd-name:hover { color: var(--terracotta); }
+
+.rotd-meta {
+    display: flex;
+    gap: 0.9rem;
+    flex-wrap: wrap;
+    font-size: 0.76rem;
+    color: var(--ink-muted);
+}
+
+.rotd-meta span { display: inline-flex; align-items: center; gap: 0.32rem; }
+.rotd-meta .icon { color: var(--rule-strong); }
+
+.rotd-side {
+    flex: none;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0 1.25rem 0 0.5rem;
+}
+
+.icon-btn {
+    width: 34px; height: 34px;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    background: transparent;
+    color: var(--ink-soft);
+    cursor: pointer;
+    display: grid; place-items: center;
+    transition: border-color var(--t), color var(--t), background var(--t);
+    padding: 0;
+}
+
+.icon-btn:hover { border-color: var(--ink); color: var(--ink); }
+.icon-btn.favorited { border-color: var(--terracotta); color: var(--terracotta); background: var(--terracotta-tint); }
+
+.rotd-loading {
+    padding: 1.6rem;
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    color: var(--ink-muted);
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 0.88rem;
+    width: 100%;
+}
+
+.rotd-loading .loader-spinner { width: 20px; height: 20px; border-width: 2px; margin: 0; }
+
+/* ==================================================================
+   RESULTS TOOLBAR
+   ================================================================== */
+.results-toolbar {
+    display: none;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 1.75rem;
+}
+
+.results-toolbar.visible { display: flex; }
+
+.results-count {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 0.94rem;
+    color: var(--ink-muted);
+}
+
+.results-toolbar .spacer { margin-left: auto; }
+
+.sort-select {
+    padding: 0.42rem 1.9rem 0.42rem 0.7rem;
+    border: 1px solid var(--rule);
+    border-radius: var(--radius);
+    font-family: var(--font-sans);
+    font-size: 0.78rem;
+    color: var(--ink-soft);
+    background-color: transparent;
+    cursor: pointer;
+    outline: none;
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%238a7d70' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 9px center;
+}
+
+.sort-select:hover { border-color: var(--rule-strong); }
+
+/* ==================================================================
+   STATUS / FEEDBACK
+   ================================================================== */
+.status-bar {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-size: 0.92rem;
+    color: var(--ink-muted);
+    min-height: 0;
+}
+
+.status-bar:not(:empty) { margin-bottom: 1.1rem; }
+
+.loader { display: none; text-align: center; padding: 4rem 1rem; }
+.loader.visible { display: block; }
+
+.loader-spinner {
+    width: 34px; height: 34px;
+    border: 2px solid var(--rule-strong);
+    border-top-color: var(--terracotta);
+    border-radius: 50%;
+    animation: spin 0.9s linear infinite;
+    margin: 0 auto 1.1rem;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.loader p { color: var(--ink-muted); font-family: var(--font-serif); font-style: italic; font-size: 0.92rem; }
+
+.no-results, .empty-state { text-align: center; padding: 4rem 2rem; color: var(--ink-muted); }
+
+.no-results .icon-hero, .empty-state .icon-hero {
+    width: 40px; height: 40px;
+    margin: 0 auto 1.4rem;
+    color: var(--rule-strong);
+    stroke-width: 1.25;
+}
+
+.no-results h3, .empty-state h3 {
+    font-size: 1.4rem; font-weight: 500;
+    margin-bottom: 0.5rem; color: var(--ink);
+}
+
+.no-results p, .empty-state p { font-size: 0.92rem; max-width: 44ch; margin: 0 auto; }
+
+.error-state {
+    display: none;
+    padding: 1.4rem 1.6rem;
+    background: var(--danger-tint);
+    border: 1px solid #e6c9c2;
+    border-left: 3px solid var(--danger);
+    border-radius: var(--radius);
+    color: #6d281d;
+    margin-bottom: 2rem;
+}
+
+.error-state.visible { display: block; }
+
+.error-state h4 {
+    display: flex; align-items: center; gap: 0.55rem;
+    font-size: 1.02rem; font-weight: 600;
+    color: #6d281d; margin-bottom: 0.45rem;
+}
+
+.error-state p { font-size: 0.88rem; margin-bottom: 0.9rem; line-height: 1.7; }
+
+.error-state code {
+    background: rgba(156, 58, 44, 0.10);
+    padding: 1px 5px; border-radius: 2px;
+    font-size: 0.85em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.notice {
+    display: none;
+    gap: 0.8rem;
+    align-items: flex-start;
+    padding: 1.05rem 1.3rem;
+    background: var(--olive-tint);
+    border: 1px solid #d7dece;
+    border-left: 3px solid var(--olive);
+    border-radius: var(--radius);
+    color: #3f4a34;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    margin-bottom: 1.75rem;
+}
+
+.notice.visible { display: flex; }
+.notice .notice-icon { color: var(--olive); margin-top: 2px; flex: none; }
+.notice strong { font-weight: 600; }
+
+/* ==================================================================
+   WEB FALLBACK PANEL
+   ================================================================== */
+.web-fallback {
+    display: none;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 2.25rem;
+    text-align: center;
+    box-shadow: var(--shadow-sm);
+    margin-bottom: 2rem;
+}
+
+.web-fallback.visible { display: block; }
+
+.web-fallback .icon-hero {
+    width: 38px; height: 38px;
+    color: var(--rule-strong);
+    stroke-width: 1.25;
+    margin: 0 auto 1.2rem;
+}
+
+.web-fallback h3 { font-size: 1.45rem; font-weight: 500; margin-bottom: 0.6rem; }
+.web-fallback h3 em { font-style: italic; color: var(--terracotta); }
+
+.web-fallback > p {
+    font-size: 0.9rem;
+    color: var(--ink-muted);
+    max-width: 54ch;
+    margin: 0 auto 1.75rem;
+    line-height: 1.75;
+}
+
+.web-links {
+    display: flex;
+    gap: 0.6rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.75rem;
+}
+
+.didyoumean {
+    padding-top: 1.6rem;
+    border-top: 1px solid var(--rule);
+}
+
+.didyoumean .eyebrow { margin-bottom: 0.85rem; }
+
+.dym-list { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
+
+/* ==================================================================
+   RECIPE GRID & CARDS
+   ================================================================== */
+.recipe-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(284px, 1fr));
+    gap: 2.5rem 2rem;
+}
+
+.recipe-card {
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: var(--shadow-sm);
+    transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease), border-color 0.3s var(--ease);
+    display: flex;
+    flex-direction: column;
+}
+
+.recipe-card:hover {
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-md);
+    border-color: var(--rule-strong);
+}
+
+.card-image-wrapper {
+    position: relative;
+    overflow: hidden;
+    aspect-ratio: 4 / 3;
+    min-height: 180px;
+    background: var(--paper-tint);
+}
+
+.card-image-wrapper img {
+    display: block;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform 0.7s var(--ease);
+}
+
+.recipe-card:hover .card-image-wrapper img { transform: scale(1.04); }
+.card-image-wrapper img.img-fallback { object-fit: contain; padding: 1.5rem; opacity: 0.5; }
+
+.card-actions {
+    position: absolute;
+    top: 11px; right: 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    z-index: 2;
+}
+
+.card-icon-btn {
+    width: 34px; height: 34px;
+    border: 1px solid rgba(43, 36, 32, 0.10);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.94);
+    cursor: pointer;
+    display: grid; place-items: center;
+    color: var(--ink-soft);
+    transition: background var(--t), color var(--t), border-color var(--t), opacity var(--t);
+    padding: 0;
+    opacity: 0;
+}
+
+.recipe-card:hover .card-icon-btn,
+.card-icon-btn.favorited,
+.card-icon-btn:focus-visible { opacity: 1; }
+
+.card-icon-btn:hover { background: #fff; color: var(--terracotta); border-color: rgba(168, 80, 47, 0.4); }
+
+.card-fav-btn .heart-filled { display: none; }
+.card-fav-btn.favorited { color: var(--terracotta); opacity: 1; }
+.card-fav-btn.favorited .heart-outline { display: none; }
+.card-fav-btn.favorited .heart-filled { display: block; }
+
+.card-info {
+    padding: 1.4rem 1.5rem 1.6rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    flex: 1;
+}
+
+.card-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--olive-dark);
+}
+
+.card-title {
+    font-family: var(--font-serif);
+    font-size: 1.22rem;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--ink);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    transition: color var(--t);
+}
+
+.recipe-card:hover .card-title { color: var(--terracotta); }
+
+.card-meta {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: auto;
+    padding-top: 0.5rem;
+}
+
+.card-meta span { display: inline-flex; align-items: center; gap: 0.38rem; font-size: 0.78rem; color: var(--ink-muted); }
+.card-meta .icon { color: var(--rule-strong); }
+
+.card-match {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    align-self: flex-start;
+    border: 1px solid #d7dece;
+    background: var(--olive-tint);
+    color: var(--olive-dark);
+    border-radius: 2px;
+    padding: 0.16rem 0.5rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+}
+
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: 1px solid var(--rule-strong);
+    border-radius: 2px;
+    padding: 0.2rem 0.6rem;
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--olive-dark);
+    background: transparent;
+}
+
+/* ==================================================================
+   MODAL
+   ================================================================== */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(28, 23, 20, 0.55);
+    backdrop-filter: blur(3px);
+    z-index: 1000;
+    justify-content: center;
+    align-items: flex-start;
+    padding: 2.5rem 1.5rem;
+    overflow-y: auto;
+}
+
+.modal-overlay.visible { display: flex; }
+
+.modal {
+    background: var(--paper);
+    border-radius: var(--radius-lg);
+    max-width: 880px;
+    width: 100%;
+    margin: auto;
+    box-shadow: var(--shadow-xl);
+    position: relative;
+    animation: modalIn 0.3s var(--ease);
+    border: 1px solid var(--rule);
+}
+
+@keyframes modalIn {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.modal-close {
+    position: absolute;
+    top: 14px; right: 14px;
+    width: 36px; height: 36px;
+    border: 1px solid rgba(43, 36, 32, 0.12);
+    border-radius: 2px;
+    background: rgba(255, 255, 255, 0.94);
+    cursor: pointer;
+    display: grid; place-items: center;
+    color: var(--ink);
+    z-index: 10;
+    transition: background var(--t), border-color var(--t);
+    padding: 0;
+}
+
+.modal-close:hover { background: #fff; border-color: var(--ink); }
+
+.modal-hero {
+    background: var(--paper-tint);
+    overflow: hidden;
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+    min-height: 160px;
+}
+
+.modal-hero img { display: block; width: 100%; max-height: 380px; object-fit: cover; }
+
+.modal-body { padding: 2.5rem 3rem 3rem; }
+
+.modal-head {
+    padding-bottom: 1.6rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 1.6rem;
+}
+
+.modal-eyebrow { margin-bottom: 0.8rem; }
+
+.modal-title {
+    font-size: 2.2rem;
+    font-weight: 500;
+    letter-spacing: -0.018em;
+    margin-bottom: 1rem;
+    line-height: 1.15;
+}
+
+.modal-tags { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+
+.modal-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 2.5rem; }
+
+.modal-section { margin-bottom: 2.5rem; }
+.modal-section:last-child { margin-bottom: 0; }
+
+.modal-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-size: 0.76rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    font-family: var(--font-sans);
+    color: var(--ink);
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 1.4rem;
+}
+
+.modal-section h3 .icon { color: var(--terracotta); }
+.modal-section h3 .h3-side { margin-left: auto; }
+
+/* Servings scaler */
+.scaler {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+    border: 1px solid var(--rule-strong);
+    border-radius: var(--radius);
+    overflow: hidden;
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.scaler button {
+    border: none;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--ink-muted);
+    padding: 0.3rem 0.62rem;
+    cursor: pointer;
+    transition: background var(--t), color var(--t);
+}
+
+.scaler button:hover { background: var(--paper-tint); color: var(--ink); }
+.scaler button.active { background: var(--terracotta); color: #fdf9f6; }
+
+/* Ingredients */
+.ingredient-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+    column-gap: 3rem;
+}
+
+.ingredient-item {
+    display: flex;
+    align-items: baseline;
+    gap: 0.6rem;
+    padding: 0.6rem 0;
+    border-bottom: 1px dotted var(--rule-strong);
+    font-size: 0.92rem;
+}
+
+.ing-name { color: var(--ink-soft); }
+
+.ing-measure {
+    margin-left: auto;
+    color: var(--terracotta);
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-align: right;
+    white-space: nowrap;
+}
+
+.ingredient-empty { color: var(--ink-muted); font-style: italic; }
+
+.instructions {
+    white-space: pre-line;
+    font-size: 0.98rem;
+    line-height: 1.9;
+    color: var(--ink-soft);
+    max-width: 68ch;
+}
+
+.instructions::first-letter {
+    font-family: var(--font-serif);
+    font-size: 2.9rem;
+    float: left;
+    line-height: 0.86;
+    padding: 0.1rem 0.6rem 0 0;
+    color: var(--terracotta);
+    font-weight: 600;
+}
+
+/* Related recipes */
+.related-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+}
+
+.related-item { cursor: pointer; }
+
+.related-item img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    border-radius: var(--radius);
+    background: var(--paper-tint);
+    display: block;
+    transition: opacity var(--t);
+    border: 1px solid var(--rule);
+}
+
+.related-item:hover img { opacity: 0.82; }
+
+.related-item span {
+    display: block;
+    font-family: var(--font-serif);
+    font-size: 0.88rem;
+    color: var(--ink);
+    margin-top: 0.5rem;
+    line-height: 1.35;
+    transition: color var(--t);
+}
+
+.related-item:hover span { color: var(--terracotta); }
+
+/* ==================================================================
+   SHOPPING LIST
+   ================================================================== */
+.shop-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    padding-bottom: 1.1rem;
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 2rem;
+}
+
+.shop-toolbar h3 { font-size: 1.5rem; font-weight: 500; }
+
+.shop-progress { font-family: var(--font-serif); font-style: italic; font-size: 0.88rem; color: var(--ink-muted); }
+.shop-toolbar .spacer { margin-left: auto; }
+
+.shop-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+    gap: 0.65rem;
+}
+
+.shop-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.9rem;
+    background: var(--paper-raised);
+    border: 1px solid var(--rule);
+    border-left: 2px solid var(--terracotta);
+    border-radius: var(--radius);
+    padding: 0.9rem 1rem;
+    transition: border-color var(--t), background var(--t), opacity var(--t);
+}
+
+.shop-item:hover { border-color: var(--rule-strong); border-left-color: var(--terracotta); }
+.shop-item.checked { opacity: 0.5; border-left-color: var(--olive); background: var(--paper); }
+.shop-item.checked .shop-name, .shop-item.checked .shop-measures { text-decoration: line-through; }
+
+.shop-check { width: 17px; height: 17px; margin-top: 4px; flex: none; accent-color: var(--olive); cursor: pointer; }
+.shop-text { flex: 1; min-width: 0; }
+.shop-name { font-weight: 600; font-size: 0.94rem; color: var(--ink); word-break: break-word; }
+.shop-measures { font-size: 0.82rem; color: var(--terracotta); font-weight: 600; margin-top: 0.1rem; }
+
+.shop-source {
+    font-size: 0.75rem; color: var(--ink-muted);
+    margin-top: 0.28rem; word-break: break-word;
+    font-style: italic; font-family: var(--font-serif);
+}
+
+.shop-remove {
+    border: none; background: transparent;
+    color: var(--ink-muted); cursor: pointer;
+    padding: 0.3rem; border-radius: 2px; flex: none;
+    display: grid; place-items: center;
+    transition: color var(--t), background var(--t);
+}
+
+.shop-remove:hover { color: var(--danger); background: var(--danger-tint); }
+
+/* ==================================================================
+   TOAST / BACK TO TOP
+   ================================================================== */
+.toast {
+    position: fixed;
+    left: 50%; bottom: 28px;
+    transform: translate(-50%, 150%);
+    background: var(--ink);
+    color: var(--paper);
+    padding: 0.85rem 1.35rem;
+    border-radius: var(--radius);
+    font-size: 0.86rem;
+    font-weight: 500;
+    box-shadow: var(--shadow-lg);
+    z-index: 2000;
+    transition: transform 0.32s var(--ease);
+    max-width: 90vw;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.toast.visible { transform: translate(-50%, 0); }
+.toast .icon { color: rgba(250, 247, 242, 0.7); }
+
+.to-top {
+    position: fixed;
+    right: 24px; bottom: 24px;
+    width: 42px; height: 42px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 50%;
+    background: var(--paper-raised);
+    color: var(--ink);
+    cursor: pointer;
+    display: grid; place-items: center;
+    box-shadow: var(--shadow-md);
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(8px);
+    transition: opacity var(--t), transform var(--t), border-color var(--t);
+    z-index: 900;
+}
+
+.to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+.to-top:hover { border-color: var(--terracotta); color: var(--terracotta); }
+
+/* ==================================================================
+   RESPONSIVE
+   ================================================================== */
+@media (max-width: 768px) {
+    .site-header { padding: 1.75rem 1.25rem; }
+    .brand-name { font-size: 1.4rem; }
+    .nav-inner { padding: 0 1.25rem; gap: 1.5rem; }
+    .container { padding: 1.75rem 1.25rem 4rem; }
+    .search-section { padding: 1.4rem 1.25rem; }
+    .recipe-grid { grid-template-columns: repeat(auto-fill, minmax(248px, 1fr)); gap: 2rem 1.25rem; }
+    .modal-overlay { padding: 0; }
+    .modal { border-radius: 0; border: none; min-height: 100vh; }
+    .modal-hero { border-radius: 0; }
+    .modal-hero img { max-height: 240px; }
+    .modal-body { padding: 1.75rem 1.35rem 2.5rem; }
+    .modal-title { font-size: 1.6rem; }
+    .ingredient-list { grid-template-columns: 1fr; column-gap: 0; }
+    .shop-list { grid-template-columns: 1fr; }
+    .instructions::first-letter { font-size: 2.4rem; }
+
+    .rotd-strip { flex-wrap: wrap; min-height: 0; }
+    .rotd-thumb { width: 100%; height: 150px; }
+    .rotd-content { padding: 1rem 1.15rem; width: 100%; }
+    .rotd-side { padding: 0 1.15rem 1.15rem; width: 100%; }
+    .rotd-side .btn { flex: 1; }
+}
+
+@media (max-width: 480px) {
+    .recipe-grid { grid-template-columns: 1fr; }
+    .nav-inner { gap: 1.1rem; }
+    .nav-tab { font-size: 0.66rem; letter-spacing: 0.09em; gap: 0.4rem; }
+    .search-row { flex-direction: column; }
+    .search-row .btn { width: 100%; }
+    .filter-select { width: 100%; }
+    .mode-toggle { width: 100%; }
+    .mode-btn { flex: 1; justify-content: center; padding: 0.55rem 0.5rem; }
+    .brand-tagline { font-size: 0.62rem; letter-spacing: 0.14em; }
+    .kbd-hint { display: none; }
+    .rotd-name { white-space: normal; }
+}
+
+/* ==================================================================
+   PRINT — only the open recipe prints
+   ================================================================== */
+@media print {
+    body { background: #fff; }
+    body > *:not(.modal-overlay) { display: none !important; }
+    .modal-overlay {
+        display: block !important;
+        position: static;
+        background: none;
+        backdrop-filter: none;
+        padding: 0;
+        overflow: visible;
+    }
+    .modal {
+        box-shadow: none; border: none; max-width: 100%;
+        animation: none; background: #fff;
+    }
+    .modal-close, .modal-actions, .related-section, .scaler { display: none !important; }
+    .modal-hero img { max-height: 260px; }
+    .modal-body { padding: 1.5rem 0 0; }
+    .ingredient-list { grid-template-columns: 1fr 1fr; }
+    .instructions { max-width: 100%; }
+    a[href]::after { content: ''; }
+}
+
+/* ==================================================================
+   SCROLLBAR / MOTION
+   ================================================================== */
+::-webkit-scrollbar { width: 10px; }
+::-webkit-scrollbar-track { background: var(--paper); }
+::-webkit-scrollbar-thumb { background: var(--rule-strong); border: 3px solid var(--paper); border-radius: 6px; }
+::-webkit-scrollbar-thumb:hover { background: var(--ink-muted); }
+
+@media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== MASTHEAD ===== -->
+<header class="site-header">
+    <div class="header-inner">
+        <span class="brand-mark">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M3 2v7c0 1.1.9 2 2 2h1a2 2 0 0 0 2-2V2"/><path d="M5.5 11v11"/>
+                <path d="M17 2c-1.7 1.3-3 3.5-3 6.5 0 2 .8 3.5 2 4.5v9"/>
+            </svg>
+        </span>
+        <div>
+            <h1 class="brand-name">Recipe Finder</h1>
+            <p class="brand-tagline">Seasonal cooking &middot; Tested recipes &middot; Kitchen notes</p>
+        </div>
+    </div>
+</header>
+
+<!-- ===== NAVIGATION ===== -->
+<nav class="site-nav">
+    <div class="nav-inner">
+        <button class="nav-tab active" data-tab="search" type="button">
+            <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/>
+            </svg>
+            Recipes
+        </button>
+        <button class="nav-tab" data-tab="favorites" type="button">
+            <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            Saved
+            <span class="nav-count" id="fav-count">0</span>
+        </button>
+        <button class="nav-tab" data-tab="shopping" type="button">
+            <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            Shopping List
+            <span class="nav-count" id="shop-count">0</span>
+        </button>
+    </div>
+</nav>
+
+<div class="container">
+
+    <!-- ===== RECIPES TAB ===== -->
+    <div id="tab-search" class="tab-content active">
+
+        <!-- ===== SEARCH PANEL (now first) ===== -->
+        <div class="search-section">
+
+            <div class="mode-toggle" role="tablist" aria-label="Search mode">
+                <button class="mode-btn active" id="mode-name" data-mode="name" type="button" role="tab" aria-selected="true">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/>
+                    </svg>
+                    By name
+                </button>
+                <button class="mode-btn" id="mode-ingredients" data-mode="ingredients" type="button" role="tab" aria-selected="false">
+                    <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+                        <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+                    </svg>
+                    In my kitchen
+                </button>
+            </div>
+
+            <!-- MODE A: search by name -->
+            <div class="search-mode-panel active" id="panel-name">
+                <div class="search-row">
+                    <div class="search-input-wrapper">
+                        <svg class="icon field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        <input type="text" id="search-input" class="search-input" autocomplete="off"
+                               placeholder="Search recipes — biryani, pasta, tarte tatin…"
+                               aria-label="Search recipes by name">
+                        <span class="kbd-hint">/</span>
+                        <div class="suggest-box" id="search-suggest" role="listbox"></div>
+                    </div>
+                    <button id="search-btn" class="btn btn-primary" type="button">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        Search
+                    </button>
+                    <button id="random-btn" class="btn btn-ghost-olive" type="button">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/>
+                            <polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/>
+                        </svg>
+                        Surprise me
+                    </button>
+                </div>
+                <div class="recent-row" id="recent-row"></div>
+            </div>
+
+            <!-- MODE B: search by ingredients -->
+            <div class="search-mode-panel" id="panel-ingredients">
+                <div class="search-row">
+                    <div class="search-input-wrapper">
+                        <svg class="icon field-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/>
+                            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>
+                        </svg>
+                        <input type="text" id="ingredient-input" class="search-input" autocomplete="off"
+                               placeholder="chicken, garlic, tomato" aria-label="Search by ingredients">
+                    </div>
+                    <button id="ingredient-search-btn" class="btn btn-primary" type="button">
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/>
+                        </svg>
+                        Find recipes
+                    </button>
+                    <button id="ingredient-clear-btn" class="btn btn-ghost" type="button">Clear</button>
+                </div>
+                <p class="input-hint">
+                    Separate ingredients with commas. We look for recipes containing <strong>all</strong> of them —
+                    if there is no perfect match, we show recipes matching as many as possible.
+                </p>
+            </div>
+
+            <!-- Filters -->
+            <div class="filter-row">
+                <span class="eyebrow">Refine</span>
+                <select id="category-filter" class="filter-select" aria-label="Filter by category">
+                    <option value="">All categories</option>
+                </select>
+                <select id="area-filter" class="filter-select" aria-label="Filter by cuisine">
+                    <option value="">All cuisines</option>
+                </select>
+            </div>
+
+            <!-- Alphabet browse -->
+            <div class="letter-browse" id="letter-browse"></div>
+        </div>
+
+        <!-- ===== RECIPE OF THE DAY — compact strip, below search/filters ===== -->
+        <article class="rotd-strip" id="rotd-strip">
+            <div class="rotd-loading">
+                <div class="loader-spinner"></div>
+                <span>Selecting today&rsquo;s recipe&hellip;</span>
+            </div>
+        </article>
+
+        <!-- Results toolbar -->
+        <div class="results-toolbar" id="results-toolbar">
+            <span class="results-count" id="results-count"></span>
+            <span class="spacer"></span>
+            <label class="eyebrow" for="sort-select">Sort</label>
+            <select id="sort-select" class="sort-select">
+                <option value="default">Relevance</option>
+                <option value="az">Name A–Z</option>
+                <option value="za">Name Z–A</option>
+                <option value="cat">Category</option>
+                <option value="area">Cuisine</option>
+            </select>
+        </div>
+
+        <div class="status-bar" id="status-bar"></div>
+
+        <div class="notice" id="notice"></div>
+
+        <div class="loader" id="loader">
+            <div class="loader-spinner"></div>
+            <p id="loader-text">Finding recipes&hellip;</p>
+        </div>
+
+        <div class="error-state" id="error-state">
+            <h4>
+                <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                    <line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                Couldn&rsquo;t reach TheMealDB
+            </h4>
+            <p id="error-detail">Something went wrong while fetching recipes.</p>
+            <button class="btn btn-ghost-danger btn-sm" id="retry-btn" type="button">Retry</button>
+        </div>
+
+        <!-- Web fallback: shown when a dish genuinely isn't in the database -->
+        <div class="web-fallback" id="web-fallback"></div>
+
+        <div class="no-results" id="no-results" style="display:none;">
+            <svg class="icon-hero" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="12" cy="12" r="10"/><path d="M16 16s-1.5-2-4-2-4 2-4 2"/>
+                <line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/>
+            </svg>
+            <h3>No recipes found</h3>
+            <p>Try a different search term, or let us choose something for you with &ldquo;Surprise me&rdquo;.</p>
+        </div>
+
+        <div class="recipe-grid" id="recipe-grid"></div>
+    </div>
+
+    <!-- ===== SAVED TAB ===== -->
+    <div id="tab-favorites" class="tab-content">
+        <div class="empty-state" id="favorites-empty" style="display:none;">
+            <svg class="icon-hero" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+            </svg>
+            <h3>Nothing saved yet</h3>
+            <p>Select the heart on any recipe to keep it here for later.</p>
+        </div>
+        <div class="recipe-grid" id="favorites-grid"></div>
+    </div>
+
+    <!-- ===== SHOPPING LIST TAB ===== -->
+    <div id="tab-shopping" class="tab-content">
+        <div class="shop-toolbar" id="shop-toolbar" style="display:none;">
+            <h3>Shopping List</h3>
+            <span class="shop-progress" id="shop-progress"></span>
+            <span class="spacer"></span>
+            <button class="btn btn-ghost btn-sm" id="shop-copy-btn" type="button">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                Copy
+            </button>
+            <button class="btn btn-ghost btn-sm" id="shop-uncheck-btn" type="button">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/>
+                </svg>
+                Uncheck all
+            </button>
+            <button class="btn btn-ghost-danger btn-sm" id="shop-clear-btn" type="button">
+                <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="3 6 5 6 21 6"/>
+                    <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/>
+                    <path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>
+                </svg>
+                Clear all
+            </button>
+        </div>
+
+        <div class="empty-state" id="shopping-empty" style="display:none;">
+            <svg class="icon-hero" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <h3>Your list is empty</h3>
+            <p>Open any recipe and choose &ldquo;Add ingredients&rdquo; to start building your list.</p>
+        </div>
+
+        <ul class="shop-list" id="shop-list"></ul>
+    </div>
+</div>
+
+<!-- ===== MODAL ===== -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal" id="modal" role="dialog" aria-modal="true">
+        <button class="modal-close" id="modal-close" type="button" aria-label="Close">
+            <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+        </button>
+        <div id="modal-content"></div>
+    </div>
+</div>
+
+<!-- ===== BACK TO TOP ===== -->
+<button class="to-top" id="to-top" type="button" aria-label="Back to top">
+    <svg class="icon icon-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/>
+    </svg>
+</button>
+
+<!-- ===== TOAST ===== -->
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+
+<script>
+'use strict';
+// ================================================================
+// RECIPE FINDER — Vanilla JavaScript
+// TheMealDB free API (no key required)
+// ================================================================
+
+window.addEventListener('error', (e) => {
+    console.error('[RecipeFinder] Uncaught error:', e.message, '@', e.filename + ':' + e.lineno);
+});
+window.addEventListener('unhandledrejection', (e) => {
+    console.error('[RecipeFinder] Unhandled promise rejection:', e.reason);
+});
+
+const API = 'https://www.themealdb.com/api/json/v1/1';
+
+const LS_FAVORITES = 'recipeFavorites';
+const LS_SHOPPING  = 'recipeShoppingList';
+const LS_ROTD      = 'recipeOfTheDay';
+const LS_ROTD_POOL = 'recipeOfTheDayPool';
+const LS_CATALOG   = 'recipeCatalogIndex';   // { built, meals: [] }
+const LS_RECENT    = 'recipeRecentSearches';
+
+const CATALOG_TTL_MS = 7 * 24 * 60 * 60 * 1000; // rebuild the index weekly
+
+const PLACEHOLDER_IMG =
+    "data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='300'%3E" +
+    "%3Crect width='400' height='300' fill='%23f2ece2'/%3E" +
+    "%3Cg stroke='%23d2c6b6' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'%3E" +
+    "%3Crect x='170' y='128' width='60' height='46' rx='3'/%3E%3Ccircle cx='186' cy='143' r='5'/%3E" +
+    "%3Cpath d='M170 164l17-15 12 11 9-8 22 20'/%3E%3C/g%3E%3C/svg%3E";
+
+// ================================================================
+// ICON SYSTEM — Lucide-style outline SVGs, currentColor throughout.
+// ================================================================
+const ICONS = {
+    search:    '<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/>',
+    heart:     '<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>',
+    cart:      '<circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>',
+    star:      '<polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>',
+    book:      '<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
+    clipboard: '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/>',
+    globe:     '<circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>',
+    tag:       '<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>',
+    shuffle:   '<polyline points="16 3 21 3 21 8"/><line x1="4" y1="20" x2="21" y2="3"/><polyline points="21 16 21 21 16 21"/><line x1="15" y1="15" x2="21" y2="21"/><line x1="4" y1="4" x2="9" y2="9"/>',
+    leaf:      '<path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10z"/><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"/>',
+    x:         '<line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>',
+    play:      '<circle cx="12" cy="12" r="10"/><polygon points="10 8 16 12 10 16 10 8"/>',
+    alert:     '<path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>',
+    info:      '<circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/>',
+    check:     '<polyline points="20 6 9 17 4 12"/>',
+    arrow:     '<line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/>',
+    trash:     '<polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/>',
+    printer:   '<polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/>',
+    share:     '<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>',
+    copy:      '<rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>',
+    external:  '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>',
+    clock:     '<circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/>',
+    grid:      '<rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/>',
+    users:     '<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/>'
+};
+
+function svgIcon(name, extraClass, opts) {
+    const body = ICONS[name];
+    if (!body) { console.error('[RecipeFinder] Unknown icon requested:', name); return ''; }
+    const filled = opts && opts.filled;
+    return `<svg class="icon ${extraClass || ''}" viewBox="0 0 24 24" ` +
+           `fill="${filled ? 'currentColor' : 'none'}" ` +
+           `stroke="${filled ? 'none' : 'currentColor'}" ` +
+           `stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" ` +
+           `aria-hidden="true" focusable="false">${body}</svg>`;
+}
+
+function $(id) {
+    const el = document.getElementById(id);
+    if (!el) console.error(`[RecipeFinder] MISSING DOM ELEMENT: #${id}.`);
+    return el;
+}
+
+// ----- DOM REFERENCES -----
+const searchInput      = $('search-input');
+const searchBtn        = $('search-btn');
+const randomBtn        = $('random-btn');
+const searchSuggest    = $('search-suggest');
+const recentRow        = $('recent-row');
+const ingredientInput  = $('ingredient-input');
+const ingredientBtn    = $('ingredient-search-btn');
+const ingredientClear  = $('ingredient-clear-btn');
+const categoryFilter   = $('category-filter');
+const areaFilter       = $('area-filter');
+const recipeGrid       = $('recipe-grid');
+const favoritesGrid    = $('favorites-grid');
+const loader           = $('loader');
+const loaderText       = $('loader-text');
+const noResults        = $('no-results');
+const errorState       = $('error-state');
+const errorDetail      = $('error-detail');
+const retryBtn         = $('retry-btn');
+const noticeBox        = $('notice');
+const webFallback      = $('web-fallback');
+const statusBar        = $('status-bar');
+const resultsToolbar   = $('results-toolbar');
+const resultsCount     = $('results-count');
+const sortSelect       = $('sort-select');
+const modalOverlay     = $('modal-overlay');
+const modalContent     = $('modal-content');
+const modalClose       = $('modal-close');
+const favCountSpan     = $('fav-count');
+const shopCountSpan    = $('shop-count');
+const favoritesEmpty   = $('favorites-empty');
+const letterBrowse     = $('letter-browse');
+const rotdStrip        = $('rotd-strip');
+const shopList         = $('shop-list');
+const shopToolbar      = $('shop-toolbar');
+const shopProgress     = $('shop-progress');
+const shoppingEmpty    = $('shopping-empty');
+const shopClearBtn     = $('shop-clear-btn');
+const shopUncheckBtn   = $('shop-uncheck-btn');
+const shopCopyBtn      = $('shop-copy-btn');
+const toastEl          = $('toast');
+const toTopBtn         = $('to-top');
+
+// ----- STATE -----
+let favorites = [];
+let shoppingList = [];
+let recentSearches = [];
+let debounceTimer = null;
+let suggestTimer = null;
+let lastAction = null;
+let searchMode = 'name';
+let rotdMeal = null;
+let toastTimer = null;
+let currentResults = [];       // last rendered result set (for sorting)
+let currentIsPartial = false;
+let currentModalMeal = null;   // meal open in the detail view
+let currentScale = 1;          // servings multiplier in the detail view
+let suggestIndex = -1;         // keyboard-highlighted suggestion
+
+// Monotonic token: only the newest request may paint results.
+let requestToken = 0;
+
+// ================================================================
+// SAFE localStorage HELPERS
+// ================================================================
+function readJSON(key, fallback, validate) {
+    try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return fallback;
+        const parsed = JSON.parse(raw);
+        if (validate && !validate(parsed)) {
+            console.error(`[RecipeFinder] localStorage "${key}" failed validation. Resetting.`);
+            localStorage.removeItem(key);
+            return fallback;
+        }
+        return parsed;
+    } catch (err) {
+        console.error(`[RecipeFinder] Corrupt localStorage "${key}" — resetting.`, err);
+        try { localStorage.removeItem(key); } catch (_) {}
+        return fallback;
+    }
+}
+
+function writeJSON(key, value) {
+    try {
+        localStorage.setItem(key, JSON.stringify(value));
+    } catch (err) {
+        console.error(`[RecipeFinder] Could not write "${key}" to localStorage.`, err);
+    }
+}
+
+function escapeHtml(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, (c) => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[c]);
+}
+
+// ================================================================
+// TOAST
+// ================================================================
+function showToast(message, iconName) {
+    toastEl.innerHTML = `${iconName ? svgIcon(iconName, 'icon-sm') : ''}<span>${escapeHtml(message)}</span>`;
+    toastEl.classList.add('visible');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toastEl.classList.remove('visible'), 2600);
+}
+
+// ================================================================
+// HELPER: Parse ingredients from a meal object
+// ================================================================
+/**
+ * TheMealDB returns ingredients in a denormalized ("wide") format:
+ *   strIngredient1..20 with PARALLEL strMeasure1..20.
+ * There is no array and no count field, so we loop the fixed range 1..20.
+ * Meals with fewer than 20 ingredients leave the rest as empty strings,
+ * whitespace, or null — all three occur — so we skip any slot whose trimmed
+ * INGREDIENT is falsy. We key the skip off the ingredient, not the measure,
+ * because valid entries like "Salt" often ship with an empty measure.
+ */
+function parseIngredients(meal) {
+    const ingredients = [];
+    for (let i = 1; i <= 20; i++) {
+        const ingredient = meal[`strIngredient${i}`];
+        const measure = meal[`strMeasure${i}`];
+        if (ingredient && String(ingredient).trim() !== '') {
+            ingredients.push({
+                ingredient: String(ingredient).trim(),
+                measure: measure ? String(measure).trim() : ''
+            });
+        }
+    }
+    return ingredients;
+}
+
+// ================================================================
+// SERVINGS SCALER — measurement maths
+// ================================================================
+/**
+ * TheMealDB measures are free text: "1 1/2 cups", "200g", "2-3", "½ tsp",
+ * "a splash". To scale them we:
+ *   1. Pull any LEADING quantity — mixed number, fraction, decimal, unicode
+ *      fraction, or a range like "2-3".
+ *   2. Multiply just that number, leaving the unit text untouched.
+ *   3. Re-format back into a friendly fraction ("0.75" reads worse than "3/4").
+ * If no leading number exists ("a splash"), the string passes through
+ * unchanged — scaling "a splash" is meaningless.
+ */
+const UNICODE_FRACTIONS = {
+    '½': 0.5, '⅓': 1/3, '⅔': 2/3, '¼': 0.25, '¾': 0.75,
+    '⅕': 0.2, '⅖': 0.4, '⅗': 0.6, '⅘': 0.8,
+    '⅙': 1/6, '⅚': 5/6, '⅛': 0.125, '⅜': 0.375, '⅝': 0.625, '⅞': 0.875
+};
+
+// Common fractions, used to render a decimal back as readable text.
+const NICE_FRACTIONS = [
+    [1/8, '1/8'], [1/4, '1/4'], [1/3, '1/3'], [3/8, '3/8'], [1/2, '1/2'],
+    [5/8, '5/8'], [2/3, '2/3'], [3/4, '3/4'], [7/8, '7/8']
+];
+
+function formatQuantity(n) {
+    if (!isFinite(n) || n <= 0) return '';
+    const rounded = Math.round(n * 1000) / 1000;
+    const whole = Math.floor(rounded + 1e-9);
+    const frac = rounded - whole;
+
+    if (frac < 0.02) return String(whole);
+
+    // Snap to the nearest common fraction if we're close enough.
+    for (const [value, label] of NICE_FRACTIONS) {
+        if (Math.abs(frac - value) < 0.03) {
+            return whole > 0 ? `${whole} ${label}` : label;
+        }
+    }
+    // Otherwise a tidy decimal.
+    return String(Math.round(rounded * 100) / 100);
+}
+
+function scaleMeasure(measure, factor) {
+    if (!measure || factor === 1) return measure;
+
+    const text = measure.trim();
+
+    // Range: "2-3 cloves" → scale both ends.
+    const range = text.match(/^(\d+(?:\.\d+)?)\s*[-–]\s*(\d+(?:\.\d+)?)(.*)$/);
+    if (range) {
+        return `${formatQuantity(parseFloat(range[1]) * factor)}-${formatQuantity(parseFloat(range[2]) * factor)}${range[3]}`;
+    }
+
+    // Unicode fraction, optionally after a whole number: "1 ½ cups".
+    const uni = text.match(/^(\d+\s*)?([½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞])(.*)$/);
+    if (uni) {
+        const whole = uni[1] ? parseFloat(uni[1]) : 0;
+        return `${formatQuantity((whole + UNICODE_FRACTIONS[uni[2]]) * factor)}${uni[3]}`;
+    }
+
+    // Mixed number: "1 1/2 cups".
+    const mixed = text.match(/^(\d+)\s+(\d+)\/(\d+)(.*)$/);
+    if (mixed) {
+        const value = parseInt(mixed[1], 10) + parseInt(mixed[2], 10) / parseInt(mixed[3], 10);
+        return `${formatQuantity(value * factor)}${mixed[4]}`;
+    }
+
+    // Simple fraction: "3/4 cup".
+    const frac = text.match(/^(\d+)\/(\d+)(.*)$/);
+    if (frac) {
+        return `${formatQuantity((parseInt(frac[1], 10) / parseInt(frac[2], 10)) * factor)}${frac[3]}`;
+    }
+
+    // Plain number / decimal: "200g", "1.5 tbsp".
+    const plain = text.match(/^(\d+(?:\.\d+)?)(.*)$/);
+    if (plain) {
+        return `${formatQuantity(parseFloat(plain[1]) * factor)}${plain[2]}`;
+    }
+
+    return measure; // "a splash", "to taste" — nothing to scale.
+}
+
+// ================================================================
+// FAVORITES
+// ================================================================
+function loadFavorites() {
+    const data = readJSON(LS_FAVORITES, [], v => Array.isArray(v));
+    return data.filter(f => f && typeof f === 'object' && f.id);
+}
+
+function isFavorite(mealId) {
+    return favorites.some(f => String(f.id) === String(mealId));
+}
+
+function toggleFavorite(meal) {
+    const id = String(meal.idMeal);
+    if (isFavorite(id)) {
+        favorites = favorites.filter(f => String(f.id) !== id);
+    } else {
+        favorites.push({
+            id: id,
+            name: meal.strMeal,
+            thumb: meal.strMealThumb,
+            category: meal.strCategory || '',
+            area: meal.strArea || ''
+        });
+    }
+    writeJSON(LS_FAVORITES, favorites);
+    updateFavCount();
+}
+
+function updateFavCount() {
+    if (favCountSpan) favCountSpan.textContent = favorites.length;
+}
+
+// ================================================================
+// RECENT SEARCHES
+// ================================================================
+function loadRecent() {
+    return readJSON(LS_RECENT, [], v => Array.isArray(v)).filter(s => typeof s === 'string').slice(0, 8);
+}
+
+function addRecent(term) {
+    const t = term.trim();
+    if (!t) return;
+    recentSearches = [t, ...recentSearches.filter(s => s.toLowerCase() !== t.toLowerCase())].slice(0, 8);
+    writeJSON(LS_RECENT, recentSearches);
+    renderRecent();
+}
+
+function renderRecent() {
+    if (!recentSearches.length) {
+        recentRow.classList.remove('visible');
+        recentRow.innerHTML = '';
+        return;
+    }
+    recentRow.classList.add('visible');
+    recentRow.innerHTML =
+        `<span class="eyebrow">Recent</span>` +
+        recentSearches.map(s =>
+            `<button class="chip" type="button" data-recent="${escapeHtml(s)}">${svgIcon('clock', 'icon-xs')}${escapeHtml(s)}</button>`
+        ).join('') +
+        `<button class="chip chip-clear" type="button" id="recent-clear">Clear</button>`;
+}
+
+// ================================================================
+// SHOPPING LIST
+// ================================================================
+/**
+ * Each item: { key, name, measures: [], recipes: [], checked }
+ *
+ * `key` is the normalised (lowercased, whitespace-collapsed) name and is the
+ * ONLY thing used for duplicate detection — that's what makes the merge
+ * case-insensitive. "Olive Oil" / "olive oil" / "  Olive   Oil " all collapse
+ * to "olive oil" and land on the same row.
+ *
+ * `measures` stays an ARRAY rather than being overwritten, because the same
+ * ingredient from two recipes usually needs two amounts ("1 tbsp" + "200g").
+ * The API's measures are free text, so summing them isn't generally possible.
+ */
+function loadShoppingList() {
+    const data = readJSON(LS_SHOPPING, [], v => Array.isArray(v));
+    return data
+        .filter(i => i && typeof i === 'object' && i.name)
+        .map(i => ({
+            key: i.key || shoppingKey(i.name),
+            name: String(i.name),
+            measures: Array.isArray(i.measures) ? i.measures.filter(Boolean).map(String) : [],
+            recipes: Array.isArray(i.recipes) ? i.recipes.filter(Boolean).map(String) : [],
+            checked: Boolean(i.checked)
+        }));
+}
+
+function saveShoppingList() {
+    writeJSON(LS_SHOPPING, shoppingList);
+    updateShopCount();
+}
+
+function shoppingKey(name) {
+    return String(name || '').trim().toLowerCase().replace(/\s+/g, ' ');
+}
+
+function updateShopCount() {
+    if (shopCountSpan) shopCountSpan.textContent = shoppingList.length;
+}
+
+/**
+ * Adds every ingredient of a recipe to the list, merging duplicates.
+ * `scale` lets the detail view push already-scaled quantities, so if you're
+ * cooking a double batch the shopping list reflects that.
+ */
+function addRecipeToShoppingList(meal, scale) {
+    const factor = scale || 1;
+    const ingredients = parseIngredients(meal);
+    const recipeName = meal.strMeal || 'Unknown recipe';
+    let added = 0;
+    let merged = 0;
+
+    ingredients.forEach(({ ingredient, measure }) => {
+        const key = shoppingKey(ingredient);
+        if (!key) return;
+
+        const scaled = scaleMeasure(measure, factor);
+        const existing = shoppingList.find(item => item.key === key);
+
+        if (existing) {
+            // MERGE — enrich the existing row rather than adding a second one.
+            merged++;
+            if (scaled && !existing.measures.includes(scaled)) existing.measures.push(scaled);
+            if (!existing.recipes.includes(recipeName)) existing.recipes.push(recipeName);
+            existing.checked = false; // needed again
+        } else {
+            added++;
+            shoppingList.push({
+                key,
+                name: ingredient,
+                measures: scaled ? [scaled] : [],
+                recipes: [recipeName],
+                checked: false
+            });
+        }
+    });
+
+    saveShoppingList();
+    if (document.getElementById('tab-shopping').classList.contains('active')) renderShoppingList();
+    return { added, merged, total: ingredients.length };
+}
+
+function renderShoppingList() {
+    updateShopCount();
+    shopList.innerHTML = '';
+
+    if (shoppingList.length === 0) {
+        shoppingEmpty.style.display = 'block';
+        shopToolbar.style.display = 'none';
+        return;
+    }
+
+    shoppingEmpty.style.display = 'none';
+    shopToolbar.style.display = 'flex';
+
+    const done = shoppingList.filter(i => i.checked).length;
+    shopProgress.textContent = `${done} of ${shoppingList.length} gathered`;
+
+    const fragment = document.createDocumentFragment();
+
+    shoppingList.forEach(item => {
+        const li = document.createElement('li');
+        li.className = 'shop-item' + (item.checked ? ' checked' : '');
+        li.dataset.key = item.key;
+
+        const measuresText = item.measures.length ? item.measures.join('  +  ') : '';
+        const sourceText = item.recipes.length ? `for ${item.recipes.join(', ')}` : '';
+
+        li.innerHTML = `
+            <input type="checkbox" class="shop-check" ${item.checked ? 'checked' : ''}
+                   aria-label="Mark ${escapeHtml(item.name)} as gathered">
+            <div class="shop-text">
+                <div class="shop-name">${escapeHtml(item.name)}</div>
+                ${measuresText ? `<div class="shop-measures">${escapeHtml(measuresText)}</div>` : ''}
+                ${sourceText ? `<div class="shop-source">${escapeHtml(sourceText)}</div>` : ''}
+            </div>
+            <button class="shop-remove" type="button" aria-label="Remove ${escapeHtml(item.name)}">
+                ${svgIcon('x', 'icon-sm')}
+            </button>
+        `;
+        fragment.appendChild(li);
+    });
+
+    shopList.appendChild(fragment);
+}
+
+// ================================================================
+// UI STATE HELPERS
+// ================================================================
+function hideAllFeedback() {
+    noResults.style.display = 'none';
+    errorState.classList.remove('visible');
+    noticeBox.classList.remove('visible');
+    webFallback.classList.remove('visible');
+    resultsToolbar.classList.remove('visible');
+}
+
+function showLoader(text) {
+    loaderText.textContent = text || 'Finding recipes…';
+    loader.classList.add('visible');
+    hideAllFeedback();
+    recipeGrid.innerHTML = '';
+    statusBar.textContent = '';
+    searchBtn.disabled = true;
+    randomBtn.disabled = true;
+    ingredientBtn.disabled = true;
+}
+
+function hideLoader() {
+    loader.classList.remove('visible');
+    searchBtn.disabled = false;
+    randomBtn.disabled = false;
+    ingredientBtn.disabled = false;
+}
+
+function showNoResults(message) {
+    noResults.style.display = 'block';
+    errorState.classList.remove('visible');
+    if (message) statusBar.textContent = message;
+}
+
+function showError(err, contextLabel) {
+    console.error(`[RecipeFinder] ${contextLabel} failed:`, err);
+    noResults.style.display = 'none';
+    errorState.classList.add('visible');
+    errorDetail.innerHTML =
+        `Request failed while <strong>${escapeHtml(contextLabel)}</strong>. ` +
+        `<br>Details: <code>${escapeHtml(err && err.message ? err.message : String(err))}</code>` +
+        `<br>Check your internet connection and the DevTools Network tab.`;
+    statusBar.textContent = '';
+}
+
+function showNotice(html) {
+    noticeBox.innerHTML = `${svgIcon('info', 'notice-icon')}<div>${html}</div>`;
+    noticeBox.classList.add('visible');
+}
+
+function setStatus(text) {
+    statusBar.textContent = text;
+}
+
+function clearLetterHighlight() {
+    document.querySelectorAll('.letter-btn').forEach(b => b.classList.remove('active'));
+}
+
+// ================================================================
+// API FETCHING
+// ================================================================
+/**
+ * Every request is logged; every failure is console.error'd with its URL and
+ * RETHROWN, so callers can distinguish "the request failed" from "the request
+ * succeeded and returned zero matches" ({"meals": null}).
+ */
+async function fetchJSON(url) {
+    console.log('[RecipeFinder] GET', url);
+    let response;
+    try {
+        response = await fetch(url);
+    } catch (networkErr) {
+        console.error('[RecipeFinder] Network/CORS failure for:', url, networkErr);
+        throw new Error('Network request failed (offline, DNS, or CORS)');
+    }
+    if (!response.ok) {
+        console.error('[RecipeFinder] HTTP', response.status, response.statusText, '->', url);
+        throw new Error(`HTTP ${response.status} ${response.statusText}`);
+    }
+    try {
+        return await response.json();
+    } catch (parseErr) {
+        console.error('[RecipeFinder] Response was not valid JSON:', url, parseErr);
+        throw new Error('Malformed JSON response from API');
+    }
+}
+
+// ================================================================
+// CATALOG INDEX — the engine behind fuzzy search & autocomplete
+// ================================================================
+/**
+ * WHY THIS EXISTS
+ * TheMealDB's search.php?s= does a plain substring match on the meal title.
+ * That means a typo ("chiken"), a word-order swap ("masala tikka"), or an
+ * ingredient typed into the name box all return {"meals": null} — even when a
+ * perfectly good recipe exists. The database is also small (~300 meals), so a
+ * dead end is common.
+ *
+ * THE FIX
+ * Fetch the ENTIRE catalog once via search.php?f={a..z} (26 requests), reduce
+ * each meal to a slim record, and cache it in localStorage for a week. From
+ * then on we can run typo-tolerant scoring locally, instantly, with zero
+ * network cost — which powers both the autocomplete dropdown and the
+ * "did you mean" recovery when the live API finds nothing.
+ *
+ * SIZE: we store only id/name/category/area/thumb plus a lowercased blob of
+ * the ingredient names — roughly 120 KB for ~300 meals, comfortably inside the
+ * ~5 MB localStorage budget. Storing full instructions would blow it.
+ *
+ * POLITENESS: the 26 requests run 4-at-a-time in the background 1.2s after
+ * load, so they never compete with the first paint.
+ */
+let catalog = [];              // slim records
+let catalogPromise = null;     // dedupes concurrent ensureCatalog() calls
+
+function loadCatalogFromCache() {
+    const cached = readJSON(LS_CATALOG, null, v => v && typeof v.built === 'number' && Array.isArray(v.meals));
+    if (!cached) return null;
+    if (Date.now() - cached.built > CATALOG_TTL_MS) {
+        console.log('[RecipeFinder] Catalog cache expired — will rebuild.');
+        return null;
+    }
+    return cached.meals;
+}
+
+async function buildCatalog() {
+    const letters = 'abcdefghijklmnopqrstuvwxyz'.split('');
+    const collected = new Map();
+    const CONCURRENCY = 4;
+
+    // Simple worker pool: 4 in flight at a time.
+    let cursor = 0;
+    async function worker() {
+        while (cursor < letters.length) {
+            const letter = letters[cursor++];
+            try {
+                const data = await fetchJSON(`${API}/search.php?f=${letter}`);
+                if (data && Array.isArray(data.meals)) {
+                    data.meals.forEach(m => {
+                        if (!m || !m.idMeal) return;
+                        // Slim record + a searchable ingredient blob.
+                        const ings = parseIngredients(m).map(i => i.ingredient.toLowerCase());
+                        collected.set(String(m.idMeal), {
+                            id: String(m.idMeal),
+                            n: m.strMeal || '',
+                            c: m.strCategory || '',
+                            a: m.strArea || '',
+                            t: m.strMealThumb || '',
+                            g: ings.join('|')
+                        });
+                    });
+                }
+            } catch (err) {
+                console.warn('[RecipeFinder] Catalog letter failed:', letter, err.message);
+            }
+        }
+    }
+
+    await Promise.all(Array.from({ length: CONCURRENCY }, worker));
+
+    const meals = Array.from(collected.values());
+    if (meals.length) {
+        writeJSON(LS_CATALOG, { built: Date.now(), meals });
+        console.log(`[RecipeFinder] Catalog index built: ${meals.length} recipes cached.`);
+    }
+    return meals;
+}
+
+function ensureCatalog() {
+    if (catalog.length) return Promise.resolve(catalog);
+    if (catalogPromise) return catalogPromise;
+
+    const cached = loadCatalogFromCache();
+    if (cached && cached.length) {
+        catalog = cached;
+        console.log(`[RecipeFinder] Catalog loaded from cache: ${catalog.length} recipes.`);
+        return Promise.resolve(catalog);
+    }
+
+    catalogPromise = buildCatalog().then(meals => {
+        catalog = meals;
+        catalogPromise = null;
+        return catalog;
+    }).catch(err => {
+        console.error('[RecipeFinder] Catalog build failed:', err);
+        catalogPromise = null;
+        return [];
+    });
+
+    return catalogPromise;
+}
+
+// ---- Fuzzy scoring ------------------------------------------------
+/**
+ * Levenshtein distance, capped for speed. Only used on short words, so the
+ * classic O(n*m) DP table is fine here.
+ */
+function levenshtein(a, b) {
+    if (a === b) return 0;
+    if (!a.length) return b.length;
+    if (!b.length) return a.length;
+    if (Math.abs(a.length - b.length) > 3) return 99; // early reject
+
+    let prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+    for (let i = 1; i <= a.length; i++) {
+        const curr = [i];
+        for (let j = 1; j <= b.length; j++) {
+            curr[j] = Math.min(
+                prev[j] + 1,
+                curr[j - 1] + 1,
+                prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1)
+            );
+        }
+        prev = curr;
+    }
+    return prev[b.length];
+}
+
+/**
+ * Scores one catalog record against a query. Higher is better; 0 means "no
+ * match at all". The tiers are deliberately far apart so an exact title match
+ * can never be outranked by a fuzzy ingredient hit.
+ */
+function scoreMeal(rec, query, tokens) {
+    const name = rec.n.toLowerCase();
+    let score = 0;
+
+    if (name === query) return 10000;                    // exact title
+    if (name.startsWith(query)) score += 3000;           // title prefix
+    else if (name.includes(query)) score += 2000;        // title substring
+
+    const nameWords = name.split(/[^a-z0-9]+/).filter(Boolean);
+
+    // Every query token present somewhere in the title.
+    const allInName = tokens.every(t => name.includes(t));
+    if (allInName) score += 1200;
+
+    tokens.forEach(t => {
+        if (name.includes(t)) score += 200;
+
+        // Typo tolerance: allow 1 edit for short words, 2 for longer ones.
+        if (t.length >= 4) {
+            const limit = t.length >= 7 ? 2 : 1;
+            for (const w of nameWords) {
+                if (Math.abs(w.length - t.length) > limit) continue;
+                if (levenshtein(w, t) <= limit) { score += 450; break; }
+            }
+        }
+
+        // Ingredient hit — useful but ranked well below title matches.
+        if (rec.g.includes(t)) score += 120;
+    });
+
+    // Category / cuisine hits ("dessert", "italian").
+    if (rec.c.toLowerCase().includes(query)) score += 300;
+    if (rec.a.toLowerCase().includes(query)) score += 300;
+
+    return score;
+}
+
+function searchCatalog(rawQuery, limit) {
+    const query = rawQuery.trim().toLowerCase();
+    if (!query || !catalog.length) return [];
+    const tokens = query.split(/[^a-z0-9]+/).filter(t => t.length > 1);
+
+    const scored = [];
+    for (const rec of catalog) {
+        const s = scoreMeal(rec, query, tokens.length ? tokens : [query]);
+        if (s > 0) scored.push({ rec, s });
+    }
+    scored.sort((a, b) => b.s - a.s || a.rec.n.localeCompare(b.rec.n));
+    return scored.slice(0, limit || 24).map(x => x.rec);
+}
+
+// Convert a slim catalog record back into a meal-shaped object for rendering.
+function recToMeal(rec) {
+    return {
+        idMeal: rec.id,
+        strMeal: rec.n,
+        strMealThumb: rec.t,
+        strCategory: rec.c,
+        strArea: rec.a
+    };
+}
+
+// ================================================================
+// AUTOCOMPLETE
+// ================================================================
+function renderSuggestions(query) {
+    const matches = searchCatalog(query, 6);
+    suggestIndex = -1;
+
+    if (!matches.length) {
+        searchSuggest.classList.remove('visible');
+        searchSuggest.innerHTML = '';
+        return;
+    }
+
+    const q = query.trim().toLowerCase();
+    searchSuggest.innerHTML =
+        `<div class="suggest-head">Suggestions</div>` +
+        matches.map(rec => {
+            // Highlight the matched substring in the title, if present.
+            let display = escapeHtml(rec.n);
+            const idx = rec.n.toLowerCase().indexOf(q);
+            if (idx !== -1 && q.length > 1) {
+                display = escapeHtml(rec.n.slice(0, idx)) +
+                          '<mark>' + escapeHtml(rec.n.slice(idx, idx + q.length)) + '</mark>' +
+                          escapeHtml(rec.n.slice(idx + q.length));
+            }
+            const meta = [rec.c, rec.a].filter(Boolean).join(' · ');
+            return `
+                <div class="suggest-item" role="option" data-id="${escapeHtml(rec.id)}">
+                    <img class="suggest-thumb" src="${escapeHtml(rec.t || PLACEHOLDER_IMG)}" alt="" loading="lazy" referrerpolicy="no-referrer">
+                    <div class="suggest-text">
+                        <div class="suggest-name">${display}</div>
+                        <div class="suggest-meta">${escapeHtml(meta)}</div>
+                    </div>
+                </div>`;
+        }).join('');
+
+    searchSuggest.classList.add('visible');
+}
+
+function hideSuggestions() {
+    searchSuggest.classList.remove('visible');
+    suggestIndex = -1;
+}
+
+function moveSuggestion(delta) {
+    const items = searchSuggest.querySelectorAll('.suggest-item');
+    if (!items.length) return;
+    suggestIndex = (suggestIndex + delta + items.length) % items.length;
+    items.forEach((el, i) => el.classList.toggle('highlight', i === suggestIndex));
+    items[suggestIndex].scrollIntoView({ block: 'nearest' });
+}
+
+async function openSuggestion(id) {
+    hideSuggestions();
+    try {
+        showModalLoader();
+        const meal = await lookupRecipeById(id);
+        showRecipeModal(meal);
+    } catch (err) {
+        showModalError(err);
+    }
+}
+
+// ================================================================
+// RECIPE OF THE DAY
+// ================================================================
+/**
+ * ---------------------------------------------------------------
+ * DATE-HASHING LOGIC
+ * ---------------------------------------------------------------
+ * GOAL: one recipe per calendar day, stable all day, changing at midnight,
+ * identical for every user — with no server.
+ *
+ * The choice is a PURE FUNCTION of the date string. If the only input is
+ * "2024-06-11", everyone computes the same answer and a refresh can't reroll
+ * it. Math.random() would reroll on every reload, so it's not used at all.
+ *
+ * 1. todayKey() → "YYYY-MM-DD" from the LOCAL date, so it flips at the user's
+ *    own midnight. (Use toISOString() instead if you want a global UTC flip.)
+ * 2. hashString() is djb2 — tiny, fast, non-cryptographic. All we need is that
+ *    "2024-06-11" and "2024-06-12" scatter to unrelated values. `>>> 0` keeps
+ *    it an unsigned 32-bit int, which avoids signed-overflow surprises and
+ *    guarantees a non-negative array index.
+ * 3. index = hash(date) % pool.length.
+ *
+ * WHY THE POOL ISN'T FROM random.php: random.php returns a DIFFERENT meal to
+ * every caller, so a locally-cached random pool would give each browser its
+ * own "Recipe of the Day" — stable per-browser but not shared. Instead we hash
+ * the date to pick three LETTERS and fetch search.php?f={letter}. Same date →
+ * same letters → same response → same pool → same pick for everyone, with no
+ * hardcoded IDs. IDs are sorted numerically so response arrival order can't
+ * change the outcome. random.php remains the fallback if the letter fetches
+ * fail (browser-local at that point, but better than an empty card).
+ *
+ * CACHING: pool as { date, ids }, final choice as { date, mealId }. Both keyed
+ * by date, so they self-expire at midnight.
+ */
+function todayKey() {
+    const d = new Date();
+    return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+}
+
+function hashString(str) {
+    let h = 5381;
+    for (let i = 0; i < str.length; i++) {
+        h = (((h << 5) + h) + str.charCodeAt(i)) >>> 0; // h*33 + c, unsigned
+    }
+    return h;
+}
+
+function pickLettersForDate(dateStr, count) {
+    const alphabet = 'abcdefghijklmnopqrstuvwxyz'.split('');
+    const chosen = [];
+    let h = hashString(dateStr);
+    while (chosen.length < count && alphabet.length) {
+        const idx = h % alphabet.length;
+        chosen.push(alphabet.splice(idx, 1)[0]);
+        h = hashString(dateStr + '|' + chosen.join(''));
+    }
+    return chosen;
+}
+
+async function buildDailyPool(dateStr) {
+    // If the full catalog is already cached, use it — zero extra requests and
+    // a much larger, fully deterministic pool.
+    if (catalog.length) {
+        return catalog.map(r => r.id).sort((a, b) => Number(a) - Number(b));
+    }
+
+    const letters = pickLettersForDate(dateStr, 3);
+    console.log('[RecipeFinder] Pool letters for', dateStr, '→', letters.join(', '));
+
+    const settled = await Promise.allSettled(
+        letters.map(L => fetchJSON(`${API}/search.php?f=${encodeURIComponent(L)}`))
+    );
+
+    const ids = new Set();
+    settled.forEach(r => {
+        if (r.status === 'fulfilled' && r.value && Array.isArray(r.value.meals)) {
+            r.value.meals.forEach(m => { if (m && m.idMeal) ids.add(String(m.idMeal)); });
+        }
+    });
+
+    if (ids.size) return Array.from(ids).sort((a, b) => Number(a) - Number(b));
+
+    // Fallback — browser-local pool, only if every letter fetch failed.
+    console.warn('[RecipeFinder] Deterministic pool empty — falling back to random.php.');
+    const randomSettled = await Promise.allSettled(
+        Array.from({ length: 5 }, () => fetchJSON(`${API}/random.php`))
+    );
+    const randomIds = new Set();
+    randomSettled.forEach(r => {
+        if (r.status === 'fulfilled' && r.value && Array.isArray(r.value.meals) && r.value.meals[0]) {
+            randomIds.add(String(r.value.meals[0].idMeal));
+        }
+    });
+    return Array.from(randomIds).sort((a, b) => Number(a) - Number(b));
+}
+
+async function loadRecipeOfTheDay() {
+    const today = todayKey();
+
+    try {
+        // STEP 1 — already decided today? Skip straight to it.
+        const cached = readJSON(LS_ROTD, null, v => v && v.date && v.mealId);
+        if (cached && cached.date === today) {
+            console.log('[RecipeFinder] Recipe of the day cached for', today, '→', cached.mealId);
+            rotdMeal = await lookupRecipeById(cached.mealId);
+            renderRecipeOfTheDay(rotdMeal);
+            return;
+        }
+
+        // STEP 2 — get or rebuild today's pool.
+        let pool = readJSON(LS_ROTD_POOL, null, v => v && v.date && Array.isArray(v.ids));
+        if (!pool || pool.date !== today || pool.ids.length === 0) {
+            pool = { date: today, ids: await buildDailyPool(today) };
+            writeJSON(LS_ROTD_POOL, pool);
+        }
+
+        if (!pool.ids.length) {
+            renderRotdError(new Error('Could not build a recipe pool for today.'));
+            return;
+        }
+
+        // STEP 3 — the deterministic pick.
+        const index = hashString(today) % pool.ids.length;
+        const mealId = pool.ids[index];
+        console.log(`[RecipeFinder] hash("${today}") % ${pool.ids.length} = ${index} → meal ${mealId}`);
+
+        // STEP 4 — remember it so a refresh can't reroll.
+        writeJSON(LS_ROTD, { date: today, mealId });
+
+        rotdMeal = await lookupRecipeById(mealId);
+        renderRecipeOfTheDay(rotdMeal);
+
+    } catch (err) {
+        console.error('[RecipeFinder] Recipe of the day failed:', err);
+        renderRotdError(err);
+    }
+}
+
+function renderRotdError(err) {
+    rotdStrip.innerHTML = `
+        <div class="rotd-loading" style="color: var(--danger);">
+            ${svgIcon('alert', 'icon-sm')}
+            <span>Couldn't load today's recipe — ${escapeHtml(err && err.message ? err.message : 'unknown error')}</span>
+            <button class="btn btn-ghost btn-xs" id="rotd-retry" type="button" style="margin-left:auto;">Retry</button>
+        </div>`;
+    const btn = document.getElementById('rotd-retry');
+    if (btn) btn.addEventListener('click', () => {
+        rotdStrip.innerHTML = `<div class="rotd-loading"><div class="loader-spinner"></div><span>Selecting today&rsquo;s recipe&hellip;</span></div>`;
+        loadRecipeOfTheDay();
+    });
+}
+
+function renderRecipeOfTheDay(meal) {
+    const thumb = meal.strMealThumb || PLACEHOLDER_IMG;
+    const favored = isFavorite(meal.idMeal);
+    const dayLabel = new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'long' });
+
+    rotdStrip.innerHTML = `
+        <div class="rotd-thumb" id="rotd-thumb">
+            <img id="rotd-img" src="${escapeHtml(thumb)}" alt="${escapeHtml(meal.strMeal || '')}"
+                 referrerpolicy="no-referrer" decoding="async">
+        </div>
+        <div class="rotd-content">
+            <span class="rotd-label">
+                ${svgIcon('star', 'icon-xs')} Recipe of the Day
+                <span class="rotd-day">${escapeHtml(dayLabel)}</span>
+            </span>
+            <div class="rotd-name" id="rotd-name">${escapeHtml(meal.strMeal || 'Untitled recipe')}</div>
+            <div class="rotd-meta">
+                ${meal.strCategory ? `<span>${svgIcon('tag', 'icon-xs')}${escapeHtml(meal.strCategory)}</span>` : ''}
+                ${meal.strArea ? `<span>${svgIcon('globe', 'icon-xs')}${escapeHtml(meal.strArea)}</span>` : ''}
+                <span>${svgIcon('clipboard', 'icon-xs')}${parseIngredients(meal).length} ingredients</span>
+            </div>
+        </div>
+        <div class="rotd-side">
+            <button class="btn btn-primary btn-xs" id="rotd-view" type="button">View recipe</button>
+            <button class="icon-btn ${favored ? 'favorited' : ''}" id="rotd-fav" type="button" aria-label="Save recipe">
+                ${svgIcon('heart', 'icon-sm', { filled: favored })}
+            </button>
+            <button class="icon-btn" id="rotd-cart" type="button" aria-label="Add ingredients to shopping list">
+                ${svgIcon('cart', 'icon-sm')}
+            </button>
+        </div>`;
+
+    const img = document.getElementById('rotd-img');
+    img.addEventListener('error', () => {
+        if (img.dataset.fb) return;
+        img.dataset.fb = '1';
+        console.error('[RecipeFinder] Recipe-of-the-day image failed:', thumb);
+        img.src = PLACEHOLDER_IMG;
+    });
+
+    const open = () => showRecipeModal(meal);
+    document.getElementById('rotd-view').addEventListener('click', open);
+    document.getElementById('rotd-name').addEventListener('click', open);
+    document.getElementById('rotd-thumb').addEventListener('click', open);
+
+    document.getElementById('rotd-fav').addEventListener('click', (e) => {
+        e.stopPropagation();
+        toggleFavorite(meal);
+        const nowFav = isFavorite(meal.idMeal);
+        const btn = e.currentTarget;
+        btn.classList.toggle('favorited', nowFav);
+        btn.innerHTML = svgIcon('heart', 'icon-sm', { filled: nowFav });
+        refreshFavStateOnCards();
+        if (document.getElementById('tab-favorites').classList.contains('active')) renderFavorites();
+    });
+
+    document.getElementById('rotd-cart').addEventListener('click', (e) => {
+        e.stopPropagation();
+        const r = addRecipeToShoppingList(meal, 1);
+        showToast(`${r.added} added${r.merged ? `, ${r.merged} merged` : ''} to your shopping list`, 'cart');
+    });
+}
+
+// ================================================================
+// FILTER DROPDOWNS (dynamic, not hardcoded)
+// ================================================================
+async function loadFilters() {
+    const [catResult, areaResult] = await Promise.allSettled([
+        fetchJSON(`${API}/list.php?c=list`),
+        fetchJSON(`${API}/list.php?a=list`)
+    ]);
+
+    if (catResult.status === 'fulfilled' && catResult.value && catResult.value.meals) {
+        catResult.value.meals.forEach(cat => {
+            const opt = document.createElement('option');
+            opt.value = cat.strCategory;
+            opt.textContent = cat.strCategory;
+            categoryFilter.appendChild(opt);
+        });
+    } else {
+        console.error('[RecipeFinder] Category list unavailable.', catResult.reason);
+    }
+
+    if (areaResult.status === 'fulfilled' && areaResult.value && areaResult.value.meals) {
+        areaResult.value.meals.forEach(area => {
+            const opt = document.createElement('option');
+            opt.value = area.strArea;
+            opt.textContent = area.strArea;
+            areaFilter.appendChild(opt);
+        });
+    } else {
+        console.error('[RecipeFinder] Area list unavailable.', areaResult.reason);
+    }
+}
+
+function buildLetterBrowse() {
+    'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('').forEach(letter => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'letter-btn';
+        btn.textContent = letter;
+        btn.addEventListener('click', () => searchByLetter(letter));
+        letterBrowse.appendChild(btn);
+    });
+}
+
+// ================================================================
+// SEARCH BY NAME — 4-stage fallback chain
+// ================================================================
+/**
+ * TheMealDB's name search is a strict substring match, so it fails on typos,
+ * word-order changes, and anything that isn't in its ~300-recipe database.
+ * Rather than dead-ending, we escalate:
+ *
+ *   STAGE 1  search.php?s=      — the live API, exact behaviour preserved.
+ *   STAGE 2  local catalog      — typo-tolerant fuzzy scoring over the cached
+ *                                 index (handles "chiken tika", "masala tikka").
+ *   STAGE 3  filter.php?i=      — maybe they typed an ingredient, not a dish.
+ *   STAGE 4  web fallback panel — the dish genuinely isn't in the database;
+ *                                 offer Google/YouTube/AllRecipes plus the
+ *                                 closest local suggestions.
+ *
+ * Each stage that isn't the plain API result explains itself with a notice, so
+ * the user always knows why they're seeing what they're seeing.
+ */
+async function searchByName(query) {
+    const q = (query || '').trim();
+    if (!q) return;
+    lastAction = () => searchByName(q);
+    hideSuggestions();
+
+    const token = ++requestToken;
+    showLoader(`Searching for “${q}”…`);
+    categoryFilter.value = '';
+    areaFilter.value = '';
+    clearLetterHighlight();
+
+    try {
+        // ---- STAGE 1: live API name search ----
+        const data = await fetchJSON(`${API}/search.php?s=${encodeURIComponent(q)}`);
+        if (token !== requestToken) return;
+
+        if (data.meals && data.meals.length) {
+            hideLoader();
+            addRecent(q);
+            renderResults(data.meals, false, `${data.meals.length} recipe${data.meals.length === 1 ? '' : 's'} for “${q}”`);
+            return;
+        }
+
+        // ---- STAGE 2: fuzzy match against the cached catalog ----
+        loaderText.textContent = 'Looking for close matches…';
+        await ensureCatalog();
+        if (token !== requestToken) return;
+
+        const fuzzy = searchCatalog(q, 24);
+        if (fuzzy.length) {
+            hideLoader();
+            addRecent(q);
+            renderResults(fuzzy.map(recToMeal), true, `${fuzzy.length} close match${fuzzy.length === 1 ? '' : 'es'} for “${q}”`);
+            showNotice(`No exact title match for <strong>${escapeHtml(q)}</strong> — showing the closest recipes we have, including ingredient and spelling matches.`);
+            return;
+        }
+
+        // ---- STAGE 3: maybe it's an ingredient ----
+        loaderText.textContent = 'Checking ingredients…';
+        let ingData = null;
+        try {
+            ingData = await fetchJSON(`${API}/filter.php?i=${encodeURIComponent(q)}`);
+        } catch (_) { /* non-fatal — fall through to stage 4 */ }
+        if (token !== requestToken) return;
+
+        if (ingData && ingData.meals && ingData.meals.length) {
+            hideLoader();
+            addRecent(q);
+            renderResults(ingData.meals, true, `${ingData.meals.length} recipe${ingData.meals.length === 1 ? '' : 's'} using “${q}”`);
+            showNotice(`No dish is called <strong>${escapeHtml(q)}</strong>, but these recipes use it as an ingredient.`);
+            return;
+        }
+
+        // ---- STAGE 4: genuinely not in the database ----
+        hideLoader();
+        showWebFallback(q);
+
+    } catch (err) {
+        if (token !== requestToken) return;
+        hideLoader();
+        showError(err, `searching for "${q}"`);
+    }
+}
+
+/**
+ * WEB FALLBACK
+ * We cannot query Google from the browser: their search pages block
+ * cross-origin fetches (CORS) and scraping breaks their terms; the official
+ * Custom Search API needs a key and billing. So instead of pretending, we hand
+ * the user one-click, correctly-encoded searches on the sites that DO have the
+ * dish — plus the nearest matches from our own index so they aren't
+ * dead-ended.
+ */
+function showWebFallback(query) {
+    const q = encodeURIComponent(query + ' recipe');
+    const suggestions = searchCatalog(query, 6);
+
+    webFallback.innerHTML = `
+        <svg class="icon-hero" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/><line x1="8" y1="11" x2="14" y2="11"/>
+        </svg>
+        <h3>We don't have <em>${escapeHtml(query)}</em> yet</h3>
+        <p>
+            This site is powered by TheMealDB, a free community database of about 300 curated recipes —
+            so plenty of dishes simply aren't in it. Here are one-click searches on sites that will have it:
+        </p>
+        <div class="web-links">
+            <a class="btn btn-primary" href="https://www.google.com/search?q=${q}" target="_blank" rel="noopener noreferrer">
+                ${svgIcon('external', 'icon-sm')} Search Google
+            </a>
+            <a class="btn btn-ghost" href="https://www.youtube.com/results?search_query=${q}" target="_blank" rel="noopener noreferrer">
+                ${svgIcon('play', 'icon-sm')} Video recipes
+            </a>
+            <a class="btn btn-ghost" href="https://www.allrecipes.com/search?q=${encodeURIComponent(query)}" target="_blank" rel="noopener noreferrer">
+                ${svgIcon('book', 'icon-sm')} AllRecipes
+            </a>
+        </div>
+        ${suggestions.length ? `
+            <div class="didyoumean">
+                <div class="eyebrow">${svgIcon('info', 'icon-xs')} Did you mean</div>
+                <div class="dym-list">
+                    ${suggestions.map(r => `<button class="chip" type="button" data-dym="${escapeHtml(r.id)}">${escapeHtml(r.n)}</button>`).join('')}
+                </div>
+            </div>` : ''}
+    `;
+
+    webFallback.classList.add('visible');
+    setStatus(`No results in our database for “${query}”`);
+
+    webFallback.querySelectorAll('[data-dym]').forEach(btn => {
+        btn.addEventListener('click', () => openSuggestion(btn.dataset.dym));
+    });
+}
+
+// ================================================================
+// SEARCH BY INGREDIENTS ("In my kitchen")
+// ================================================================
+/**
+ * ---------------------------------------------------------------
+ * INGREDIENT-INTERSECTION LOGIC
+ * ---------------------------------------------------------------
+ * THE PROBLEM: filter.php?i= accepts exactly ONE ingredient. There is no
+ * "chicken AND garlic AND tomato" query, so the AND happens client-side.
+ *
+ * 1. Split on commas, trim, collapse whitespace, drop blanks, de-duplicate
+ *    case-insensitively ("garlic, Garlic" must not cost two requests).
+ * 2. One filter.php?i= request PER ingredient, all in PARALLEL via
+ *    Promise.allSettled — independent requests, so three ingredients cost one
+ *    round-trip of wall time, not three. allSettled (not all) so one dud
+ *    ingredient can't abort the rest.
+ * 3. Each response → a Map of mealId → meal. Maps give O(1) membership tests,
+ *    which is what makes the intersection cheap. An unknown ingredient returns
+ *    {"meals": null} → an EMPTY map, correctly forcing the intersection to
+ *    nothing.
+ * 4. Intersect starting from the SMALLEST map — the result can never exceed
+ *    the smallest input set, so there's no point iterating a 300-item list
+ *    when another input has 4. Bail out early once it empties.
+ * 5. FALLBACK: if the intersection is empty, build the UNION but RANK it by
+ *    how many of the user's ingredients each recipe matched, descending. A
+ *    recipe matching 2 of 3 is far more useful than one matching 1, and an
+ *    unranked union buries the good ones. Each card shows "matches 2 of 3".
+ *
+ * filter.php returns PARTIAL meals (id, name, thumb only), so these render
+ * with isPartialData=true and clicks route through the lookup.php hydration.
+ */
+function parseIngredientQuery(raw) {
+    const seen = new Set();
+    return String(raw || '')
+        .split(',')
+        .map(s => s.trim().replace(/\s+/g, ' '))
+        .filter(Boolean)
+        .filter(s => {
+            const k = s.toLowerCase();
+            if (seen.has(k)) return false;
+            seen.add(k);
+            return true;
+        });
+}
+
+async function searchByIngredients(rawQuery) {
+    const terms = parseIngredientQuery(rawQuery);
+    if (!terms.length) {
+        showNoResults('Type at least one ingredient, separated by commas.');
+        return;
+    }
+
+    lastAction = () => searchByIngredients(rawQuery);
+    const token = ++requestToken;
+    showLoader(`Checking ${terms.length} ingredient${terms.length === 1 ? '' : 's'}…`);
+    categoryFilter.value = '';
+    areaFilter.value = '';
+    searchInput.value = '';
+    clearLetterHighlight();
+
+    try {
+        const settled = await Promise.allSettled(
+            terms.map(t => fetchJSON(`${API}/filter.php?i=${encodeURIComponent(t)}`))
+        );
+        if (token !== requestToken) return;
+        hideLoader();
+
+        const maps = [];
+        const failedTerms = [];
+        const unknownTerms = [];
+
+        settled.forEach((r, i) => {
+            const term = terms[i];
+            if (r.status === 'rejected') { failedTerms.push(term); return; }
+            const meals = r.value && r.value.meals;
+            if (!meals || !meals.length) {
+                unknownTerms.push(term);
+                maps.push({ term, map: new Map() });
+                return;
+            }
+            const m = new Map();
+            meals.forEach(x => { if (x && x.idMeal) m.set(String(x.idMeal), x); });
+            maps.push({ term, map: m });
+        });
+
+        // Every request failed → network problem, not an empty result.
+        if (maps.length === 0) {
+            showError(new Error(`All ${terms.length} ingredient request(s) failed`),
+                      `searching ingredients: ${terms.join(', ')}`);
+            return;
+        }
+
+        // Intersection, smallest-set-first.
+        const ordered = maps.slice().sort((a, b) => a.map.size - b.map.size);
+        let intersection = new Map(ordered[0].map);
+        for (let i = 1; i < ordered.length; i++) {
+            const other = ordered[i].map;
+            const next = new Map();
+            for (const [id, meal] of intersection) if (other.has(id)) next.set(id, meal);
+            intersection = next;
+            if (intersection.size === 0) break;
+        }
+
+        const termLabel = terms.map(t => `“${t}”`).join(' + ');
+
+        if (intersection.size > 0) {
+            const results = Array.from(intersection.values());
+            renderResults(results, true, `${results.length} recipe${results.length === 1 ? '' : 's'} containing all of: ${termLabel}`);
+            if (failedTerms.length) {
+                showNotice(`Couldn't check <strong>${escapeHtml(failedTerms.join(', '))}</strong> — results reflect the remaining ingredients.`);
+            }
+            return;
+        }
+
+        // Ranked union fallback.
+        const counts = new Map();
+        const union = new Map();
+        maps.forEach(({ map }) => {
+            map.forEach((meal, id) => {
+                union.set(id, meal);
+                counts.set(id, (counts.get(id) || 0) + 1);
+            });
+        });
+
+        if (union.size === 0) {
+            showNoResults(`No recipes found for ${termLabel}`);
+            if (unknownTerms.length) {
+                showNotice(`TheMealDB doesn't recognise: <strong>${escapeHtml(unknownTerms.join(', '))}</strong>. Try a simpler name — “chicken” rather than “chicken thighs”.`);
+            }
+            return;
+        }
+
+        const ranked = Array.from(union.entries())
+            .map(([id, meal]) => Object.assign({}, meal, {
+                _matchNote: `matches ${counts.get(id) || 0} of ${terms.length}`,
+                _matchCount: counts.get(id) || 0
+            }))
+            .sort((a, b) => b._matchCount - a._matchCount);
+
+        renderResults(ranked, true, `${ranked.length} recipe${ranked.length === 1 ? '' : 's'} with at least one of: ${termLabel}`);
+
+        let noticeHtml = `<strong>No exact matches.</strong> No single recipe contains all of ${escapeHtml(terms.join(', '))}. Showing recipes with at least one ingredient, best matches first.`;
+        if (unknownTerms.length) noticeHtml += `<br>Not recognised by the API: <strong>${escapeHtml(unknownTerms.join(', '))}</strong>.`;
+        if (failedTerms.length) noticeHtml += `<br>Request failed for: <strong>${escapeHtml(failedTerms.join(', '))}</strong>.`;
+        showNotice(noticeHtml);
+
+    } catch (err) {
+        if (token !== requestToken) return;
+        hideLoader();
+        showError(err, `searching ingredients: ${terms.join(', ')}`);
+    }
+}
+
+// ================================================================
+// LETTER / CATEGORY / AREA / RANDOM
+// ================================================================
+async function searchByLetter(letter) {
+    lastAction = () => searchByLetter(letter);
+    const token = ++requestToken;
+    showLoader(`Browsing “${letter}”…`);
+    searchInput.value = '';
+    categoryFilter.value = '';
+    areaFilter.value = '';
+
+    clearLetterHighlight();
+    document.querySelectorAll('.letter-btn').forEach(btn => {
+        if (btn.textContent === letter) btn.classList.add('active');
+    });
+
+    try {
+        const data = await fetchJSON(`${API}/search.php?f=${encodeURIComponent(letter)}`);
+        if (token !== requestToken) return;
+        hideLoader();
+
+        if (!data.meals) { showNoResults(`No recipes beginning with “${letter}”`); return; }
+        renderResults(data.meals, false, `${data.meals.length} recipe${data.meals.length === 1 ? '' : 's'} beginning with “${letter}”`);
+    } catch (err) {
+        if (token !== requestToken) return;
+        hideLoader();
+        showError(err, `browsing letter "${letter}"`);
+    }
+}
+
+/**
+ * TWO-STEP FETCH PATTERN (filter → lookup)
+ *
+ * The filter endpoints (?c=, ?a=, ?i=) return a DELIBERATELY TRIMMED payload:
+ * only idMeal, strMeal, strMealThumb. No instructions, no area, no category,
+ * no youtube link, and none of the strIngredient1..20 / strMeasure1..20 fields.
+ *
+ * STEP 1 (here): render cards from that partial data — a thumbnail and a name
+ * is all a grid card needs. We tag the render with isPartialData = true.
+ * STEP 2 (card click): lookup.php?i={id} fetches the ONE full recipe actually
+ * being opened.
+ *
+ * Hydrating all ~40 results up front would mean ~40 round-trips for a grid
+ * where 39 are never opened. Deferring costs one request at the exact moment
+ * the data is needed — classic list-then-detail lazy loading.
+ */
+async function filterByCategory(category) {
+    if (!category) return;
+    lastAction = () => filterByCategory(category);
+    const token = ++requestToken;
+    showLoader(`Loading “${category}”…`);
+    searchInput.value = '';
+    areaFilter.value = '';
+    clearLetterHighlight();
+
+    try {
+        const data = await fetchJSON(`${API}/filter.php?c=${encodeURIComponent(category)}`);
+        if (token !== requestToken) return;
+        hideLoader();
+        if (!data.meals) { showNoResults(`No recipes found in “${category}”`); return; }
+        renderResults(data.meals, true, `${data.meals.length} recipe${data.meals.length === 1 ? '' : 's'} in “${category}”`);
+    } catch (err) {
+        if (token !== requestToken) return;
+        hideLoader();
+        showError(err, `filtering by category "${category}"`);
+    }
+}
+
+async function filterByArea(area) {
+    if (!area) return;
+    lastAction = () => filterByArea(area);
+    const token = ++requestToken;
+    showLoader(`Loading “${area}” cuisine…`);
+    searchInput.value = '';
+    categoryFilter.value = '';
+    clearLetterHighlight();
+
+    try {
+        const data = await fetchJSON(`${API}/filter.php?a=${encodeURIComponent(area)}`);
+        if (token !== requestToken) return;
+        hideLoader();
+        if (!data.meals) { showNoResults(`No recipes found for “${area}” cuisine`); return; }
+        renderResults(data.meals, true, `${data.meals.length} recipe${data.meals.length === 1 ? '' : 's'} from “${area}” cuisine`);
+    } catch (err) {
+        if (token !== requestToken) return;
+        hideLoader();
+        showError(err, `filtering by cuisine "${area}"`);
+    }
+}
+
+async function getRandomRecipe() {
+    lastAction = getRandomRecipe;
+    const token = ++requestToken;
+    showLoader('Picking something good…');
+    searchInput.value = '';
+    categoryFilter.value = '';
+    areaFilter.value = '';
+    clearLetterHighlight();
+
+    try {
+        const data = await fetchJSON(`${API}/random.php`);
+        if (token !== requestToken) return;
+        hideLoader();
+        if (!data.meals) { showNoResults('The random endpoint returned nothing — try again.'); return; }
+        renderResults(data.meals, false, 'A recipe chosen at random');
+    } catch (err) {
+        if (token !== requestToken) return;
+        hideLoader();
+        showError(err, 'fetching a random recipe');
+    }
+}
+
+// STEP 2 of the two-step fetch.
+async function lookupRecipeById(id) {
+    const data = await fetchJSON(`${API}/lookup.php?i=${encodeURIComponent(id)}`);
+    if (data && data.meals && data.meals.length > 0) return data.meals[0];
+    throw new Error(`Lookup returned no recipe for id ${id}`);
+}
+
+// ================================================================
+// RESULTS RENDERING + SORTING
+// ================================================================
+function renderResults(meals, isPartial, countLabel) {
+    currentResults = meals.slice();
+    currentIsPartial = isPartial;
+    sortSelect.value = 'default';
+
+    resultsCount.textContent = countLabel || `${meals.length} recipes`;
+    resultsToolbar.classList.add('visible');
+    statusBar.textContent = '';
+
+    renderRecipeCards(currentResults, recipeGrid, isPartial);
+}
+
+function applySort() {
+    const mode = sortSelect.value;
+    let list = currentResults.slice();
+
+    if (mode === 'az')      list.sort((a, b) => (a.strMeal || '').localeCompare(b.strMeal || ''));
+    else if (mode === 'za') list.sort((a, b) => (b.strMeal || '').localeCompare(a.strMeal || ''));
+    else if (mode === 'cat') list.sort((a, b) => (a.strCategory || 'zzz').localeCompare(b.strCategory || 'zzz') || (a.strMeal || '').localeCompare(b.strMeal || ''));
+    else if (mode === 'area') list.sort((a, b) => (a.strArea || 'zzz').localeCompare(b.strArea || 'zzz') || (a.strMeal || '').localeCompare(b.strMeal || ''));
+    // 'default' keeps the original relevance order.
+
+    renderRecipeCards(list, recipeGrid, currentIsPartial);
+}
+
+function renderRecipeCards(meals, container, isPartialData) {
+    container.innerHTML = '';
+    if (container === recipeGrid) noResults.style.display = 'none';
+
+    if (!Array.isArray(meals) || meals.length === 0) {
+        console.warn('[RecipeFinder] renderRecipeCards called with no meals.');
+        return;
+    }
+
+    const fragment = document.createDocumentFragment();
+
+    meals.forEach(meal => {
+        const card = document.createElement('article');
+        card.className = 'recipe-card';
+
+        const favored = isFavorite(meal.idMeal);
+        // Guard against a missing thumb producing src="undefined" → 404 → blank box.
+        const thumbUrl = meal.strMealThumb ? meal.strMealThumb : PLACEHOLDER_IMG;
+
+        card.innerHTML = `
+            <div class="card-image-wrapper">
+                <img class="card-thumb" src="${escapeHtml(thumbUrl)}"
+                     alt="${escapeHtml(meal.strMeal || 'Recipe')}"
+                     loading="lazy" decoding="async" referrerpolicy="no-referrer">
+                <div class="card-actions">
+                    <button class="card-icon-btn card-fav-btn ${favored ? 'favorited' : ''}"
+                            type="button" data-meal-id="${escapeHtml(meal.idMeal)}"
+                            aria-label="Toggle saved" title="Save recipe">
+                        ${svgIcon('heart', 'icon-sm heart-outline')}
+                        ${svgIcon('heart', 'icon-sm heart-filled', { filled: true })}
+                    </button>
+                    <button class="card-icon-btn card-cart-btn" type="button"
+                            aria-label="Add ingredients to shopping list" title="Add ingredients">
+                        ${svgIcon('cart', 'icon-sm')}
+                    </button>
+                </div>
+            </div>
+            <div class="card-info">
+                ${meal.strCategory ? `<span class="card-eyebrow">${svgIcon('tag', 'icon-xs')}${escapeHtml(meal.strCategory)}</span>` : ''}
+                <h3 class="card-title">${escapeHtml(meal.strMeal || 'Untitled recipe')}</h3>
+                ${meal._matchNote ? `<span class="card-match">${svgIcon('check', 'icon-xs')}${escapeHtml(meal._matchNote)}</span>` : ''}
+                ${meal.strArea ? `<div class="card-meta"><span>${svgIcon('globe', 'icon-xs')}${escapeHtml(meal.strArea)}</span></div>` : ''}
+            </div>`;
+
+        // Image failures must be visible, not silent blank rectangles.
+        const imgEl = card.querySelector('.card-thumb');
+        imgEl.addEventListener('error', () => {
+            if (imgEl.dataset.fb) return;
+            imgEl.dataset.fb = '1';
+            console.error('[RecipeFinder] Thumbnail failed for "' + (meal.strMeal || 'unknown') + '":', thumbUrl);
+            imgEl.src = PLACEHOLDER_IMG;
+            imgEl.classList.add('img-fallback');
+        });
+
+        // ---- Favourite ----
+        const favBtn = card.querySelector('.card-fav-btn');
+        favBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            try {
+                let mealForStorage = meal;
+                // Only hydrate when ADDING a partial record — the Saved tab
+                // needs category/area to render without re-fetching.
+                if (!isFavorite(meal.idMeal) && isPartialData && !meal.strCategory) {
+                    favBtn.disabled = true;
+                    mealForStorage = await lookupRecipeById(meal.idMeal);
+                }
+                toggleFavorite(mealForStorage);
+                // Derive from state — a blind toggle desyncs if the lookup fails.
+                favBtn.classList.toggle('favorited', isFavorite(meal.idMeal));
+                if (document.getElementById('tab-favorites').classList.contains('active')) renderFavorites();
+            } catch (err) {
+                console.error('[RecipeFinder] Favorite update failed for', meal.idMeal, err);
+            } finally {
+                favBtn.disabled = false;
+            }
+        });
+
+        // ---- Quick add to shopping list (needs full data → lookup) ----
+        const cartBtn = card.querySelector('.card-cart-btn');
+        cartBtn.addEventListener('click', async (e) => {
+            e.stopPropagation();
+            cartBtn.disabled = true;
+            try {
+                const full = meal.strInstructions ? meal : await lookupRecipeById(meal.idMeal);
+                const r = addRecipeToShoppingList(full, 1);
+                showToast(`${r.added} added${r.merged ? `, ${r.merged} merged` : ''} from ${full.strMeal}`, 'cart');
+            } catch (err) {
+                console.error('[RecipeFinder] Quick-add failed for', meal.idMeal, err);
+                showToast('Could not add ingredients', 'alert');
+            } finally {
+                cartBtn.disabled = false;
+            }
+        });
+
+        // ---- Open detail view (STEP 2 of the two-step fetch) ----
+        card.addEventListener('click', async () => {
+            try {
+                let fullMeal = meal;
+                // Partial by flag OR by evidence — favorites rebuilt from
+                // localStorage also lack instructions.
+                if (isPartialData || !meal.strInstructions) {
+                    showModalLoader();
+                    fullMeal = await lookupRecipeById(meal.idMeal);
+                }
+                showRecipeModal(fullMeal);
+            } catch (err) {
+                console.error('[RecipeFinder] Detail load failed for', meal.idMeal, err);
+                showModalError(err);
+            }
+        });
+
+        fragment.appendChild(card);
+    });
+
+    container.appendChild(fragment);
+}
+
+// ================================================================
+// RECIPE DETAIL VIEW
+// ================================================================
+function openModalShell() {
+    modalOverlay.classList.add('visible');
+    document.body.style.overflow = 'hidden';
+}
+
+function showModalLoader() {
+    modalContent.innerHTML = `
+        <div style="padding: 5rem 2rem; text-align: center;">
+            <div class="loader-spinner"></div>
+            <p style="color: var(--ink-muted); font-family: var(--font-serif); font-style: italic;">Loading recipe&hellip;</p>
+        </div>`;
+    openModalShell();
+}
+
+function showModalError(err) {
+    modalContent.innerHTML = `
+        <div style="padding: 4rem 2rem; text-align: center;">
+            <div style="color: var(--danger); display:flex; align-items:center; justify-content:center; gap:.55rem; margin-bottom:.6rem;">
+                ${svgIcon('alert')}
+                <h3 style="font-size:1.25rem; color: var(--danger); font-weight:500;">Couldn't load this recipe</h3>
+            </div>
+            <p style="color: var(--ink-soft); font-size: 0.9rem;">${escapeHtml(err && err.message ? err.message : 'Unknown error')}</p>
+            <p style="color: var(--ink-muted); font-size: 0.84rem; margin-top: 0.8rem;">See the DevTools Console for request details.</p>
+        </div>`;
+    openModalShell();
+}
+
+// Re-renders just the ingredient rows when the scale changes.
+function renderIngredientRows(meal, factor) {
+    const ingredients = parseIngredients(meal);
+    if (!ingredients.length) return '<li class="ingredient-empty">No ingredients listed for this recipe.</li>';
+    return ingredients.map(ing => {
+        const m = scaleMeasure(ing.measure, factor);
+        return `<li class="ingredient-item">
+                    <span class="ing-name">${escapeHtml(ing.ingredient)}</span>
+                    ${m ? `<span class="ing-measure">${escapeHtml(m)}</span>` : ''}
+                </li>`;
+    }).join('');
+}
+
+function showRecipeModal(meal) {
+    currentModalMeal = meal;
+    currentScale = 1;
+
+    const favored = isFavorite(meal.idMeal);
+    const heroUrl = meal.strMealThumb ? meal.strMealThumb : PLACEHOLDER_IMG;
+
+    const youtubeHTML = meal.strYoutube
+        ? `<a href="${escapeHtml(meal.strYoutube)}" target="_blank" rel="noopener noreferrer" class="btn btn-ghost">
+               ${svgIcon('play', 'icon-sm')} Watch method
+           </a>` : '';
+
+    const eyebrowParts = [];
+    if (meal.strCategory) eyebrowParts.push(meal.strCategory);
+    if (meal.strArea) eyebrowParts.push(meal.strArea);
+
+    const extraTags = [];
+    if (meal.strTags) meal.strTags.split(',').forEach(t => { if (t.trim()) extraTags.push(t.trim()); });
+
+    modalContent.innerHTML = `
+        <div class="modal-hero">
+            <img id="modal-hero-img" src="${escapeHtml(heroUrl)}"
+                 alt="${escapeHtml(meal.strMeal || 'Recipe')}" referrerpolicy="no-referrer">
+        </div>
+        <div class="modal-body">
+            <header class="modal-head">
+                ${eyebrowParts.length ? `<div class="eyebrow modal-eyebrow">${svgIcon('tag', 'icon-xs')}${escapeHtml(eyebrowParts.join(' · '))}</div>` : ''}
+                <h2 class="modal-title">${escapeHtml(meal.strMeal || 'Untitled recipe')}</h2>
+                ${extraTags.length ? `<div class="modal-tags">${extraTags.map(t => `<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>` : ''}
+            </header>
+
+            <div class="modal-actions">
+                ${youtubeHTML}
+                <button class="btn btn-ghost ${favored ? 'favorited' : ''}" type="button" id="modal-fav-toggle">
+                    ${svgIcon('heart', 'icon-sm', { filled: favored })} ${favored ? 'Saved' : 'Save recipe'}
+                </button>
+                <button class="btn btn-ghost" type="button" id="modal-cart-btn">
+                    ${svgIcon('cart', 'icon-sm')} Add ingredients
+                </button>
+                <button class="btn btn-ghost" type="button" id="modal-print-btn">
+                    ${svgIcon('printer', 'icon-sm')} Print
+                </button>
+                <button class="btn btn-ghost" type="button" id="modal-share-btn">
+                    ${svgIcon('share', 'icon-sm')} Share
+                </button>
+            </div>
+
+            <section class="modal-section">
+                <h3>
+                    ${svgIcon('clipboard', 'icon-sm')} Ingredients
+                    <span class="h3-side">
+                        <span class="scaler" id="scaler">
+                            <button type="button" data-scale="0.5">&frac12;&times;</button>
+                            <button type="button" data-scale="1" class="active">1&times;</button>
+                            <button type="button" data-scale="2">2&times;</button>
+                            <button type="button" data-scale="3">3&times;</button>
+                        </span>
+                    </span>
+                </h3>
+                <ul class="ingredient-list" id="ingredient-list">${renderIngredientRows(meal, 1)}</ul>
+            </section>
+
+            <section class="modal-section">
+                <h3>${svgIcon('book', 'icon-sm')} Method</h3>
+                <div class="instructions">${escapeHtml(meal.strInstructions || 'No instructions available.')}</div>
+            </section>
+
+            <section class="modal-section related-section" id="related-section" style="display:none;">
+                <h3>${svgIcon('grid', 'icon-sm')} More like this</h3>
+                <div class="related-strip" id="related-strip"></div>
+            </section>
+        </div>`;
+
+    const heroImg = document.getElementById('modal-hero-img');
+    heroImg.addEventListener('error', () => {
+        if (heroImg.dataset.fb) return;
+        heroImg.dataset.fb = '1';
+        console.error('[RecipeFinder] Hero image failed:', heroUrl);
+        heroImg.src = PLACEHOLDER_IMG;
+    });
+
+    // ---- Servings scaler ----
+    document.getElementById('scaler').addEventListener('click', (e) => {
+        const btn = e.target.closest('button[data-scale]');
+        if (!btn) return;
+        currentScale = parseFloat(btn.dataset.scale);
+        document.querySelectorAll('#scaler button').forEach(b => b.classList.toggle('active', b === btn));
+        document.getElementById('ingredient-list').innerHTML = renderIngredientRows(meal, currentScale);
+    });
+
+    // ---- Favourite ----
+    const modalFavBtn = document.getElementById('modal-fav-toggle');
+    modalFavBtn.addEventListener('click', () => {
+        toggleFavorite(meal);
+        const nowFav = isFavorite(meal.idMeal);
+        modalFavBtn.classList.toggle('favorited', nowFav);
+        modalFavBtn.innerHTML = `${svgIcon('heart', 'icon-sm', { filled: nowFav })} ${nowFav ? 'Saved' : 'Save recipe'}`;
+        refreshFavStateOnCards();
+        if (document.getElementById('tab-favorites').classList.contains('active')) renderFavorites();
+    });
+
+    // ---- Shopping list (respects the current scale) ----
+    const cartBtn = document.getElementById('modal-cart-btn');
+    cartBtn.addEventListener('click', () => {
+        const result = addRecipeToShoppingList(meal, currentScale);
+        const parts = [];
+        if (result.added) parts.push(`${result.added} added`);
+        if (result.merged) parts.push(`${result.merged} merged`);
+        const scaleNote = currentScale !== 1 ? ` at ${currentScale}×` : '';
+        showToast((parts.join(' · ') || 'Nothing to add') + scaleNote, 'cart');
+        cartBtn.innerHTML = `${svgIcon('check', 'icon-sm')} Added`;
+        setTimeout(() => { cartBtn.innerHTML = `${svgIcon('cart', 'icon-sm')} Add ingredients`; }, 1800);
+    });
+
+    // ---- Print (the print stylesheet hides everything but this modal) ----
+    document.getElementById('modal-print-btn').addEventListener('click', () => window.print());
+
+    // ---- Share: Web Share API where available, clipboard elsewhere ----
+    document.getElementById('modal-share-btn').addEventListener('click', async () => {
+        const link = meal.strYoutube || meal.strSource ||
+                     `https://www.google.com/search?q=${encodeURIComponent(meal.strMeal + ' recipe')}`;
+        const shareData = { title: meal.strMeal, text: `${meal.strMeal} — a recipe worth trying.`, url: link };
+        try {
+            if (navigator.share) {
+                await navigator.share(shareData);
+            } else {
+                await navigator.clipboard.writeText(`${meal.strMeal}\n${link}`);
+                showToast('Recipe link copied to clipboard', 'copy');
+            }
+        } catch (err) {
+            if (err && err.name !== 'AbortError') {
+                console.error('[RecipeFinder] Share failed:', err);
+                showToast('Could not share this recipe', 'alert');
+            }
+        }
+    });
+
+    openModalShell();
+    modalOverlay.scrollTop = 0;
+    loadRelated(meal);
+}
+
+/**
+ * "More like this" — one filter.php call for the same category, minus the
+ * recipe you're already reading. Partial data is fine: these are thumbnails,
+ * and clicking one runs the usual lookup hydration.
+ */
+async function loadRelated(meal) {
+    if (!meal.strCategory) return;
+    try {
+        const data = await fetchJSON(`${API}/filter.php?c=${encodeURIComponent(meal.strCategory)}`);
+        if (!data.meals || currentModalMeal !== meal) return;
+
+        const others = data.meals.filter(m => String(m.idMeal) !== String(meal.idMeal)).slice(0, 5);
+        if (!others.length) return;
+
+        const strip = document.getElementById('related-strip');
+        const section = document.getElementById('related-section');
+        if (!strip || !section) return;
+
+        strip.innerHTML = others.map(m => `
+            <div class="related-item" data-id="${escapeHtml(m.idMeal)}">
+                <img src="${escapeHtml(m.strMealThumb || PLACEHOLDER_IMG)}" alt="${escapeHtml(m.strMeal)}"
+                     loading="lazy" referrerpolicy="no-referrer">
+                <span>${escapeHtml(m.strMeal)}</span>
+            </div>`).join('');
+
+        strip.querySelectorAll('.related-item').forEach(el => {
+            el.addEventListener('click', async () => {
+                try {
+                    showModalLoader();
+                    showRecipeModal(await lookupRecipeById(el.dataset.id));
+                } catch (err) { showModalError(err); }
+            });
+        });
+
+        section.style.display = 'block';
+    } catch (err) {
+        console.warn('[RecipeFinder] Related recipes unavailable:', err.message);
+    }
+}
+
+function closeModal() {
+    modalOverlay.classList.remove('visible');
+    document.body.style.overflow = '';
+    currentModalMeal = null;
+}
+
+function refreshFavStateOnCards() {
+    document.querySelectorAll('.card-fav-btn').forEach(btn => {
+        btn.classList.toggle('favorited', isFavorite(btn.dataset.mealId));
+    });
+    const rotdFav = document.getElementById('rotd-fav');
+    if (rotdFav && rotdMeal) {
+        const nowFav = isFavorite(rotdMeal.idMeal);
+        rotdFav.classList.toggle('favorited', nowFav);
+        rotdFav.innerHTML = svgIcon('heart', 'icon-sm', { filled: nowFav });
+    }
+}
+
+// ================================================================
+// SAVED TAB
+// ================================================================
+function renderFavorites() {
+    updateFavCount();
+    favoritesGrid.innerHTML = '';
+
+    if (favorites.length === 0) {
+        favoritesEmpty.style.display = 'block';
+        return;
+    }
+    favoritesEmpty.style.display = 'none';
+
+    // Stored records are deliberately partial — favorites render instantly with
+    // zero network calls, and only pay for lookup.php when one is opened.
+    const favMeals = favorites.map(f => ({
+        idMeal: f.id,
+        strMeal: f.name,
+        strMealThumb: f.thumb,
+        strCategory: f.category,
+        strArea: f.area
+    }));
+
+    renderRecipeCards(favMeals, favoritesGrid, true);
+}
+
+// ================================================================
+// SEARCH MODE SWITCHING
+// ================================================================
+function setSearchMode(mode) {
+    searchMode = mode;
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        const on = btn.dataset.mode === mode;
+        btn.classList.toggle('active', on);
+        btn.setAttribute('aria-selected', String(on));
+    });
+    document.getElementById('panel-name').classList.toggle('active', mode === 'name');
+    document.getElementById('panel-ingredients').classList.toggle('active', mode === 'ingredients');
+    hideSuggestions();
+    if (mode === 'ingredients') ingredientInput.focus();
+    else searchInput.focus();
+}
+
+// ================================================================
+// EVENT WIRING
+// ================================================================
+/**
+ * Registered FIRST and synchronously — before any await, before any network
+ * call — so every control is live even if the API is unreachable.
+ */
+function wireEvents() {
+    // --- Search mode toggle ---
+    document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.addEventListener('click', () => setSearchMode(btn.dataset.mode));
+    });
+
+    // --- Name search ---
+    searchBtn.addEventListener('click', () => {
+        clearTimeout(debounceTimer);
+        const query = searchInput.value.trim();
+        if (query) searchByName(query); else searchInput.focus();
+    });
+
+    searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowDown') { e.preventDefault(); moveSuggestion(1); return; }
+        if (e.key === 'ArrowUp')   { e.preventDefault(); moveSuggestion(-1); return; }
+        if (e.key === 'Escape')    { hideSuggestions(); return; }
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            clearTimeout(debounceTimer);
+            // If a suggestion is highlighted, open it directly.
+            const items = searchSuggest.querySelectorAll('.suggest-item');
+            if (suggestIndex >= 0 && items[suggestIndex]) {
+                openSuggestion(items[suggestIndex].dataset.id);
+                return;
+            }
+            const query = searchInput.value.trim();
+            if (query) searchByName(query);
+        }
+    });
+
+    /**
+     * DEBOUNCED NAME SEARCH (~400ms) plus a faster local autocomplete (~120ms).
+     * The suggestions come from the cached catalog, so they cost nothing and
+     * can update almost instantly; the network search still waits 400ms.
+     */
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim();
+
+        clearTimeout(suggestTimer);
+        suggestTimer = setTimeout(() => {
+            if (query.length >= 2) renderSuggestions(query);
+            else hideSuggestions();
+        }, 120);
+
+        clearTimeout(debounceTimer);
+        debounceTimer = setTimeout(() => {
+            if (query.length >= 2) {
+                searchByName(query);
+            } else if (query.length === 0) {
+                requestToken++; // invalidate anything in flight
+                recipeGrid.innerHTML = '';
+                hideAllFeedback();
+                statusBar.textContent = '';
+            }
+        }, 400);
+    });
+
+    searchInput.addEventListener('focus', () => {
+        const q = searchInput.value.trim();
+        if (q.length >= 2) renderSuggestions(q);
+    });
+
+    // Click a suggestion.
+    searchSuggest.addEventListener('click', (e) => {
+        const item = e.target.closest('.suggest-item');
+        if (item) openSuggestion(item.dataset.id);
+    });
+
+    // Close the dropdown on any outside click.
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.search-input-wrapper')) hideSuggestions();
+    });
+
+    // Recent search chips (delegated — chips are re-rendered constantly).
+    recentRow.addEventListener('click', (e) => {
+        if (e.target.closest('#recent-clear')) {
+            recentSearches = [];
+            writeJSON(LS_RECENT, recentSearches);
+            renderRecent();
+            return;
+        }
+        const chip = e.target.closest('[data-recent]');
+        if (chip) {
+            searchInput.value = chip.dataset.recent;
+            searchByName(chip.dataset.recent);
+        }
+    });
+
+    // --- Ingredient search ---
+    /**
+     * Deliberately NOT debounce-autofired: each search issues one request PER
+     * ingredient, so auto-firing while typing "chicken, garlic, tomato" would
+     * mean dozens of parallel requests for garbage intermediates like
+     * "chicken, gar". Explicit submit only.
+     */
+    ingredientBtn.addEventListener('click', () => {
+        const raw = ingredientInput.value.trim();
+        if (raw) searchByIngredients(raw); else ingredientInput.focus();
+    });
+
+    ingredientInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const raw = ingredientInput.value.trim();
+            if (raw) searchByIngredients(raw);
+        }
+    });
+
+    ingredientClear.addEventListener('click', () => {
+        ingredientInput.value = '';
+        requestToken++;
+        recipeGrid.innerHTML = '';
+        hideAllFeedback();
+        statusBar.textContent = '';
+        ingredientInput.focus();
+    });
+
+    randomBtn.addEventListener('click', getRandomRecipe);
+
+    categoryFilter.addEventListener('change', () => {
+        if (categoryFilter.value) filterByCategory(categoryFilter.value);
+    });
+    areaFilter.addEventListener('change', () => {
+        if (areaFilter.value) filterByArea(areaFilter.value);
+    });
+
+    sortSelect.addEventListener('change', applySort);
+
+    retryBtn.addEventListener('click', () => {
+        errorState.classList.remove('visible');
+        if (typeof lastAction === 'function') lastAction(); else loadInitialRecipes();
+    });
+
+    // --- Tabs ---
+    document.querySelectorAll('.nav-tab').forEach(tab => {
+        tab.addEventListener('click', () => {
+            const tabId = tab.dataset.tab;
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+            const target = document.getElementById(`tab-${tabId}`);
+            if (target) target.classList.add('active');
+            if (tabId === 'favorites') renderFavorites();
+            if (tabId === 'shopping') renderShoppingList();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    });
+
+    // --- Shopping list: event DELEGATION (rows are rebuilt on every render) ---
+    shopList.addEventListener('click', (e) => {
+        const li = e.target.closest('.shop-item');
+        if (!li) return;
+        // .closest, not classList — the click may land on the button's <svg>.
+        if (e.target.closest('.shop-remove')) {
+            shoppingList = shoppingList.filter(i => i.key !== li.dataset.key);
+            saveShoppingList();
+            renderShoppingList();
+            showToast('Removed from shopping list', 'trash');
+        }
+    });
+
+    shopList.addEventListener('change', (e) => {
+        if (!e.target.classList.contains('shop-check')) return;
+        const li = e.target.closest('.shop-item');
+        if (!li) return;
+        const item = shoppingList.find(i => i.key === li.dataset.key);
+        if (!item) return;
+        item.checked = e.target.checked;
+        saveShoppingList();
+        // Update in place — a full re-render would lose scroll position.
+        li.classList.toggle('checked', item.checked);
+        const done = shoppingList.filter(i => i.checked).length;
+        shopProgress.textContent = `${done} of ${shoppingList.length} gathered`;
+    });
+
+    shopClearBtn.addEventListener('click', () => {
+        if (!shoppingList.length) return;
+        if (!confirm(`Clear all ${shoppingList.length} item(s) from your shopping list?`)) return;
+        shoppingList = [];
+        saveShoppingList();
+        renderShoppingList();
+        showToast('Shopping list cleared', 'trash');
+    });
+
+    shopUncheckBtn.addEventListener('click', () => {
+        shoppingList.forEach(i => { i.checked = false; });
+        saveShoppingList();
+        renderShoppingList();
+    });
+
+    shopCopyBtn.addEventListener('click', async () => {
+        const text = shoppingList
+            .map(i => `${i.checked ? '[x]' : '[ ]'} ${i.name}${i.measures.length ? ' — ' + i.measures.join(' + ') : ''}`)
+            .join('\n');
+        try {
+            await navigator.clipboard.writeText(text);
+            showToast('Shopping list copied', 'copy');
+        } catch (err) {
+            console.error('[RecipeFinder] Clipboard write failed:', err);
+            showToast('Could not copy — clipboard blocked', 'alert');
+        }
+    });
+
+    // --- Modal ---
+    modalClose.addEventListener('click', closeModal);
+    modalOverlay.addEventListener('click', (e) => { if (e.target === modalOverlay) closeModal(); });
+
+    // --- Global keyboard shortcuts ---
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') { closeModal(); hideSuggestions(); return; }
+        // "/" focuses search, unless already typing in a field.
+        if (e.key === '/' && !/^(INPUT|TEXTAREA|SELECT)$/.test(document.activeElement.tagName)) {
+            e.preventDefault();
+            document.querySelector('.nav-tab[data-tab="search"]').click();
+            searchInput.focus();
+            searchInput.select();
+        }
+    });
+
+    // --- Back to top ---
+    window.addEventListener('scroll', () => {
+        toTopBtn.classList.toggle('visible', window.scrollY > 600);
+    }, { passive: true });
+
+    toTopBtn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
+
+    console.log('[RecipeFinder] Event listeners attached successfully.');
+}
+
+// ================================================================
+// INITIAL LOAD
+// ================================================================
+async function loadInitialRecipes() {
+    lastAction = loadInitialRecipes;
+    const token = ++requestToken;
+    showLoader('Loading recipes…');
+    try {
+        const data = await fetchJSON(`${API}/search.php?s=chicken`);
+        if (token !== requestToken) return;
+        hideLoader();
+        if (!data.meals) { showNoResults('Search for a dish, or let us choose one for you.'); return; }
+        renderResults(data.meals, false, 'Popular this week');
+    } catch (err) {
+        if (token !== requestToken) return;
+        hideLoader();
+        showError(err, 'loading popular recipes');
+    }
+}
+
+// ================================================================
+// BOOTSTRAP
+// ================================================================
+async function init() {
+    console.log('[RecipeFinder] Initialising…');
+
+    // 1. Interactivity FIRST — no network here, so controls work regardless.
+    wireEvents();
+
+    // 2. Local state.
+    favorites = loadFavorites();
+    shoppingList = loadShoppingList();
+    recentSearches = loadRecent();
+    updateFavCount();
+    updateShopCount();
+    renderRecent();
+    buildLetterBrowse();
+
+    // If the catalog is already cached, adopt it immediately so autocomplete
+    // works from the very first keystroke.
+    const cachedCatalog = loadCatalogFromCache();
+    if (cachedCatalog && cachedCatalog.length) {
+        catalog = cachedCatalog;
+        console.log(`[RecipeFinder] Catalog ready from cache: ${catalog.length} recipes.`);
+    }
+
+    // 3. Network work — Recipe of the Day runs in parallel with the rest.
+    const rotdPromise = loadRecipeOfTheDay();
+
+    try {
+        await loadFilters();
+    } catch (err) {
+        console.error('[RecipeFinder] loadFilters() threw unexpectedly:', err);
+    }
+
+    await loadInitialRecipes();
+    await rotdPromise;
+
+    // 4. Build the search index in the background, after first paint, so the
+    //    26 requests never compete with the visible content.
+    if (!catalog.length) {
+        setTimeout(() => {
+            ensureCatalog().then(c => {
+                if (c.length) console.log(`[RecipeFinder] Background index ready: ${c.length} recipes searchable offline.`);
+            });
+        }, 1200);
+    }
+
+    console.log('[RecipeFinder] Ready.');
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        init().catch(err => console.error('[RecipeFinder] init() failed:', err));
+    });
+} else {
+    init().catch(err => console.error('[RecipeFinder] init() failed:', err));
+}
+</script>
+</body>
+</html>
